@@ -15,7 +15,7 @@ const MainMenu = ({ onStart }) => {
       {/* 1. Background Layer dengan Overlay Gradien Kompleks */}
       <div 
         className="absolute inset-0 bg-cover bg-center transition-transform duration-[20s] ease-out scale-95"
-        style={{ backgroundImage: `url('src/assets/main_menu_bg.png')` }}
+        style={{ backgroundImage: `url('https://raw.githubusercontent.com/kelekers/gemini-arena/refs/heads/main/src/assets/main_menu_bg.png')` }}
       >
         {/* Layer Gelap untuk kontras teks */}
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/20 to-transparent" />
