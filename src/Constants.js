@@ -1,5 +1,5 @@
 // --- 1. TABEL PENGALAMAN (XP TABLE) ---
- const XP_TABLE = {
+export const XP_TABLE = {
   1: 10,  // Menuju Lvl 2
   2: 25,  // Menuju Lvl 3
   3: 50,  // Menuju Lvl 4
@@ -10,7 +10,7 @@
 };
 
 // --- 2. PARA PERINTIS (PIONEERS) ---
- const PIONEERS = [
+export const PIONEERS = [
   {
     id: 'dipo',
     name: "DIPO",
@@ -66,7 +66,7 @@
 
 // --- 3. DATA WILAYAH (ISLANDS) ---
 // Sinkronisasi dengan WorldMap.jsx: Menggunakan 'status' dan 'coordinates.top/left'
- const ISLANDS = [
+export const ISLANDS = [
   { 
     id: 'papua_start', 
     name: 'PESISIR PAPUA', 
@@ -106,7 +106,7 @@
 
 // --- 4. ASET VISUAL PETA (MAP_ASSETS) ---
 // Menampung gambar pulau dan informasi detail sidebar
- const MAP_ASSETS = {
+export const MAP_ASSETS = {
   'papua_start': {
     idleUnlocked: "https://api.dicebear.com/7.x/identicon/svg?seed=PapuaIdle", // Ganti dengan asset PNG pulau
     hoverUnlocked: "https://api.dicebear.com/7.x/identicon/svg?seed=PapuaHover",
@@ -138,7 +138,7 @@
 };
 
 // --- 4. TIPE WILAYAH (REGION THEMES) ---
- const REGION_THEMES = {
+export const REGION_THEMES = {
   'papua_start': { color: '#0f2a1f', accent: '#d4af37' },
   'sulawesi_iron': { color: '#2a2a2a', accent: '#94a3b8' },
   'kalimantan_forest': { color: '#064e3b', accent: '#10b981' },
@@ -148,7 +148,7 @@
 
 // --- 5. DATA SINEMATIK PROLOGUE ---
 // Menggunakan alur: 2120 -> 2026 -> Discovery -> Expedition
- const PROLOGUE_SCENES = [
+export const PROLOGUE_SCENES = [
   {
     id: 1,
     year: "2120 M",
@@ -184,7 +184,7 @@
 ];
 
 // --- 6. FRAGMEN LORE (LOADING TIPS PER WILAYAH) ---
- const LOADING_TIPS = {
+export const LOADING_TIPS = {
   general: [
     {
       title: "Hukum Karsa",
@@ -239,7 +239,7 @@
   ]
 };
 
- const ENEMIES_PAPUA = {
+export const ENEMIES_PAPUA = {
   // --- 1. FAUNA TERKUTUK (Unsur Alam Papua) ---
   'p1_kasuari_belati' : {
     id: 'p1_kasuari_belati',
@@ -323,7 +323,7 @@
 
 // --- SULAWESI BESTIARY: GEMA BESI LUWU ---
 // Skala kesulitan: Level 3 - 5
- const ENEMIES_SULAWESI = [
+export const ENEMIES_SULAWESI = [
   // --- 1. FAUNA MINERAL (Mutasi Logam) ---
   {
     id: 's2_anoa_zirah',
@@ -417,7 +417,7 @@
 
 // --- KALIMANTAN BESTIARY: RIMBA ZAMRUD ---
 // Skala kesulitan: Level 4 - 6
- const ENEMIES_KALIMANTAN = [
+export const ENEMIES_KALIMANTAN = [
   // --- 1. PRIMATA & PREDATOR MUTASI (Eksperimen Hayati) ---
   {
     id: 'k3_orangutan_wira',
@@ -499,7 +499,7 @@
 
 // --- SUMATRA BESTIARY: PESISIR ANDALAS ---
 // Skala kesulitan: Level 5 - 7
- const ENEMIES_SUMATRA = [
+export const ENEMIES_SUMATRA = [
   // --- 1. KAVALERI & PREDATOR (Unsur Alam & Perang) ---
   {
     id: 's4_harimau_karsa_hitam',
@@ -583,7 +583,7 @@
 
 // --- JAWA BESTIARY: PUSAT KARSA JAWA ---
 // Skala kesulitan: Level 7 - 8 (MAX)
- const ENEMIES_JAWA = [
+export const ENEMIES_JAWA = [
   // --- 1. GARDA ELIT (Distorsi Sejarah & Militer) ---
   {
     id: 's5_sentinel_mataram_cyber',
@@ -664,7 +664,7 @@
 ];
 
 // --- 8. ITEMS: PAPUA REGION ---
- const ITEMS_PAPUA = {
+export const ITEMS_PAPUA = {
   // --- CONSUMABLES (Pemulihan & Buff Sementara) ---
   'p1_papeda_karsa': {
     id: 'p1_papeda_karsa',
@@ -745,7 +745,7 @@
 };
 
 // --- 10. ITEMS: SULAWESI REGION ---
- const ITEMS_SULAWESI = {
+export const ITEMS_SULAWESI = {
   // --- CONSUMABLES (Pemulihan & Penguatan Alkimia) ---
   's2_saraba_cair_karsa': {
     id: 's2_saraba_cair_karsa',
@@ -826,7 +826,7 @@
 };
 
 // --- 11. ITEMS: KALIMANTAN REGION ---
- const ITEMS_KALIMANTAN = {
+export const ITEMS_KALIMANTAN = {
   // --- CONSUMABLES (Hayati & Penawar) ---
   'k3_madu_kelulut_hitam': {
     id: 'k3_madu_kelulut_hitam',
@@ -908,7 +908,7 @@
 
 // --- 12. ITEMS: SUMATRA REGION ---
 // Fokus: Kavaleri, Kekuatan Maritim, dan Wibawa Sultan
- const ITEMS_SUMATRA = {
+export const ITEMS_SUMATRA = {
   // --- CONSUMABLES (Pusaka Rasa & Stamina) ---
   's4_kopi_gayo_alkimia': {
     id: 's4_kopi_gayo_alkimia',
@@ -999,7 +999,7 @@
 
 // --- 13. ITEMS: JAWA REGION ---
 // Fokus: Manipulasi Waktu, Karsa Absolut, dan Senjata Proklamasi
- const ITEMS_JAWA = {
+export const ITEMS_JAWA = {
   // --- CONSUMABLES (Energi Primordial) ---
   's5_tumpeng_karsa_agung': {
     id: 's5_tumpeng_karsa_agung',
@@ -1089,7 +1089,7 @@
 };
 
 // --- UPDATE MARKET CATALOG ---
- const MARKET_CATALOG = {
+export const MARKET_CATALOG = {
   'papua_start': [
     'p1_papeda_karsa', 'p1_pinang_alkimia', 'p1_air_penawar_bakau', 
     'p1_noken_takdir', 'p1_gelang_akar_bahar', 'p1_kapak_batu_plasma', 'p1_tombak_ikan_biak', 'p1_belati_tulang_kasuari'
@@ -1132,7 +1132,7 @@
   ]
 };
 
- const PAPUA_STORY_NODES = {
+export const PAPUA_STORY_NODES = {
   'PAP_01_ARRIVAL': {
     id: 'PAP_01_ARRIVAL',
     speaker: 'NARASI',
@@ -1253,7 +1253,7 @@
   }
 };
 
- const ITEMS = {
+export const ITEMS = {
   ...ITEMS_PAPUA,
   ...ITEMS_SULAWESI,
   ...ITEMS_KALIMANTAN,
@@ -1261,7 +1261,7 @@
   ...ITEMS_JAWA
 };
 
- const ENEMIES = {
+export const ENEMIES = {
     ...ENEMIES_PAPUA,
     ...ENEMIES_SULAWESI,
     ...ENEMIES_KALIMANTAN,
@@ -1269,6 +1269,6 @@
     ...ENEMIES_JAWA
 };
 
- const STORY_NODES = {
+export const STORY_NODES = {
     ...PAPUA_STORY_NODES
 };
