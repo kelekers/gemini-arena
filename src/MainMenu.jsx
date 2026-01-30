@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { BookOpen, Lock } from 'lucide-react';
 
-const MainMenu = ({ onStart }) => {
+const MainMenu = ({ onStart, unlockedEndings = [] }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [showArsipModal, setShowArsipModal] = useState(false);
+
+  // Sesuaikan dengan total rencana ending (misal 20)
+  const TOTAL_ENDINGS = 4;
 
   const menuItems = [
     { label: 'MULAI', action: onStart },
+    { label: 'ARSIP', action: () => setShowArsipModal(true) }, // Menu Baru
     { label: 'PENGATURAN', action: () => {} },
     { label: 'KELUAR', action: () => {} },
   ];
@@ -12,20 +19,41 @@ const MainMenu = ({ onStart }) => {
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-[#050505] font-serif text-white selection:bg-[#d4af37]/30">
       
-      {/* 1. Background Layer dengan Overlay Gradien Kompleks */}
+      {/* 1. Background Layer (Tetap Sama) */}
       <div 
         className="absolute inset-0 bg-cover bg-center transition-transform duration-[20s] ease-out scale-95"
         style={{ backgroundImage: `url('https://raw.githubusercontent.com/kelekers/gemini-arena/refs/heads/main/src/assets/main_menu_bg.png')` }}
       >
-        {/* Layer Gelap untuk kontras teks */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent" />
       </div>
 
       {/* 2. Main UI Container */}
       <div className="relative z-10 flex h-full flex-col justify-center px-20 lg:px-32">
+        
+        {/* PROGRESS ARSIP (Bumbu Baru) */}
+        <div className="mb-12 space-y-4">
+          <div className="flex items-center space-x-4 opacity-50 group hover:opacity-100 transition-opacity duration-700 cursor-default">
+            <BookOpen size={14} className="text-[#d4af37]" />
+            <span className="font-['Cinzel'] text-[10px] tracking-[0.6em] uppercase font-black text-[#d4af37]">
+              Arsip Takdir Terjamah
+            </span>
+          </div>
+          <div className="flex items-center space-x-6">
+            <div className="h-[2px] w-64 bg-white/5 border border-white/5 relative overflow-hidden">
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: `${(unlockedEndings.length / TOTAL_ENDINGS) * 100}%` }}
+                className="h-full yellow shadow-[0_0_10px_#d4af37]"
+              />
+            </div>
+            <span className="font-['Cinzel'] text-xs text-white/30 tracking-widest font-bold">
+              {unlockedEndings.length} / {TOTAL_ENDINGS}
+            </span>
+          </div>
+        </div>
 
-        {/* MENU NAVIGATION */}
-        <nav className="flex flex-col space-y-8 mt-20">
+        {/* MENU NAVIGATION (UI Utuh) */}
+        <nav className="flex flex-col space-y-8">
           {menuItems.map((item, index) => {
             const isHovered = hoveredIndex === index;
             
@@ -37,7 +65,7 @@ const MainMenu = ({ onStart }) => {
                 onClick={item.action}
                 className="group relative flex items-center w-fit outline-none"
               >
-                {/* Gold Vertical Bar (Hover Effect ala Gambar) */}
+                {/* Gold Vertical Bar Effect */}
                 <div 
                   className={`absolute -left-6 h-8 w-[3px] bg-[#d4af37] transition-all duration-500 ease-out shadow-[0_0_15px_rgba(212,175,55,0.6)]
                     ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
@@ -51,7 +79,7 @@ const MainMenu = ({ onStart }) => {
                   {item.label}
                 </span>
 
-                {/* Subtle Glow Text (Hanya saat hover) */}
+                {/* Subtle Glow Text */}
                 {isHovered && (
                   <span className="absolute left-2 font-['Cinzel'] text-3xl tracking-[0.3em] text-white blur-md opacity-30 animate-pulse">
                     {item.label}
@@ -62,7 +90,7 @@ const MainMenu = ({ onStart }) => {
           })}
         </nav>
 
-        {/* 3. Footer Branding */}
+        {/* 3. Footer Branding (UTUH) */}
         <footer className="absolute bottom-12 left-20 lg:left-32">
           <div className="flex items-center space-x-4 opacity-30 transition-opacity hover:opacity-100 duration-1000">
             <div className="h-[1px] w-8 bg-white" />
@@ -73,7 +101,42 @@ const MainMenu = ({ onStart }) => {
         </footer>
       </div>
 
-      {/* Vignette & Grain Effect (Kualitas AAA) */}
+      {/* MODAL ARSIP SEDERHANA (Dapat dikembangkan lebih lanjut) */}
+      <AnimatePresence>
+        {showArsipModal && (
+          <div 
+            className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-20 backdrop-blur-3xl"
+            onClick={() => setShowArsipModal(false)}
+          >
+            <div className="w-full max-w-2xl border border-white/5 bg-[#050505] p-16 shadow-[0_0_100px_rgba(0,0,0,1)]">
+              <h2 className="font-['Cinzel'] text-4xl text-[#d4af37] mb-12 tracking-widest uppercase italic">Fragmen Sejarah</h2>
+              <div className="grid grid-cols-1 gap-4 max-h-[400px] overflow-auto pr-6 custom-scrollbar">
+                {/* Kamu bisa me-map unlockedEndings di sini nanti */}
+                {unlockedEndings.length === 0 ? (
+                  <div className="flex flex-col items-center py-20 opacity-20">
+                    <Lock size={48} className="mb-6" />
+                    <p className="font-['Cinzel'] text-[10px] tracking-[0.5em] uppercase">Belum ada takdir yang terjamah</p>
+                  </div>
+                ) : (
+                  unlockedEndings.map((endId, i) => (
+                    <div key={i} className="p-4 border border-white/5 bg-white/[0.01] flex items-center space-x-6">
+                       <div className="h-10 w-10 bg-[#d4af37]/20 flex items-center justify-center">
+                          <span className="font-['Cinzel'] text-xs text-[#d4af37]">{i + 1}</span>
+                       </div>
+                       <span className="font-['Cinzel'] text-sm tracking-widest text-white/60">{endId.replace(/_/g, ' ')}</span>
+                    </div>
+                  ))
+                )}
+              </div>
+              <p className="mt-12 text-center font-['Cinzel'] text-[8px] tracking-[1em] text-white/10 uppercase">
+                Klik di mana saja untuk menutup
+              </p>
+            </div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Visual Effects Layer (UTUH) */}
       <div className="pointer-events-none absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03]" />
       <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_200px_rgba(0,0,0,0.9)]" />
     </div>

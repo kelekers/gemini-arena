@@ -13,14 +13,14 @@ const CombatEngine = ({
   statusEffects, 
   onStatusChange, 
   onHpChange, 
-  onItemUsed, // Callback baru untuk menghapus item di App.jsx
+  onItemUsed, 
   onVictory, 
   onDefeat, 
   onFlee 
 }) => {
   // --- STATE PERTEMPURAN ---
   const [battleHp, setBattleHp] = useState(playerStats.hp);
-  const [ultimateBar, setUltimateBar] = useState(0); // Bar Saka (0-100)
+  const [ultimateBar, setUltimateBar] = useState(0); 
   const [enemyHp, setEnemyHp] = useState(enemyData.hp);
   const [turnState, setTurnState] = useState('PLAYER_TURN');
   const [actionState, setActionState] = useState('IDLE'); 
@@ -30,33 +30,45 @@ const CombatEngine = ({
 
   const isParryWindowOpen = useRef(false);
   const parryTimerRef = useRef(null);
-  const maxBattleHp = playerStats.Tahan * 10;
+  const maxBattleHp = playerStats.maxHp || (playerStats.Tahan * 10);
+  const criticalHit = useRef(false);
 
-  // Sinkronisasi HP ke Global State
-  useEffect(() => { onHpChange(battleHp); }, [battleHp]);
+  // Sinkronisasi Suksma (HP) ke Global State secara berkala
+  useEffect(() => { onHpChange(battleHp); }, [battleHp, onHpChange]);
 
-  // --- 1. KALKULASI DAMAGE ---
+  // --- 1. KALKULASI DAMAGE (STRATEGIC SCALING) ---
   const getPlayerDmg = (stat) => {
     const base = playerStats[stat] * 1.8;
     const roll = Math.floor(Math.random() * 10) + 1;
-    return Math.round(base + (roll * 1.5));
+    let damage = Math.round(base + (roll * 1.5));
+    
+    // Critical Hit pada angka 10
+    if (roll === 10) {
+      damage = Math.round(damage * 1.5);
+      setCameraShake(20);
+      setTimeout(() => setCameraShake(0), 150);
+      criticalHit.current = true;
+    }
+
+    return damage;
   };
 
   const getEnemyDmg = () => {
-    const def = playerStats.Tahan / 1.2;
-    const base = enemyData.atk - def;
-    return Math.max(12, Math.round(base + (Math.random() * 8)));
+    const def = (playerStats.Tahan || 5) / 1.2;
+    const base = (enemyData.atk || 20) - def;
+    const roll = Math.floor(Math.random() * 8) + 1;
+    return Math.max(12, Math.round(base + roll));
   };
 
-  // --- 2. MEKANIK PERTAHANAN (PARRY) ---
+  // --- 2. MEKANIK PERTAHANAN (PARRY SYSTEM) ---
   const applyEnemyDamage = useCallback((isParried = false) => {
     isParryWindowOpen.current = false;
     if (parryTimerRef.current) clearTimeout(parryTimerRef.current);
 
     if (isParried) {
       setTurnState('ANIMATING');
-      // REWARD: Berhasil Parry memberikan +35 energi Saka
-      setUltimateBar(prev => Math.min(100, prev + 35));
+      // REWARD PARRY: Memberikan +40 energi Saka (Sakti)
+      setUltimateBar(prev => Math.min(100, prev + 40));
       setCombatLog("TANGKISAN SEMPURNA! Aliran takdir berbalik.");
       setCameraShake(15);
       setTimeout(() => {
@@ -67,7 +79,7 @@ const CombatEngine = ({
       const dmg = getEnemyDmg();
       setActionState('HURT');
       setBattleHp(prev => Math.max(0, prev - dmg));
-      setCombatLog(`Gagal menangkis! Musuh menghantam -${dmg} HP.`);
+      setCombatLog(`Gagal menangkis! Musuh menghantam -${dmg} Vitalitas.`);
       setCameraShake(10);
       
       if (battleHp - dmg <= 0) {
@@ -80,7 +92,7 @@ const CombatEngine = ({
         }, 800);
       }
     }
-  }, [battleHp, enemyData]);
+  }, [battleHp, enemyData, playerStats.Tahan, onDefeat]);
 
   const handleKeyDown = useCallback((e) => {
     if (e.code === 'Space' && isParryWindowOpen.current) {
@@ -93,13 +105,13 @@ const CombatEngine = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
-  // --- 3. SIKLUS GILIRAN MUSUH ---
+  // --- 3. ENEMY AI CYCLE ---
   useEffect(() => {
     if (turnState === 'ENEMY_TURN') {
-      setCombatLog(`${enemyData.name} mengincar titik lemahmu...`);
+      setCombatLog(`${enemyData.name} sedang mengincar celah karsamu...`);
       
       const timer = setTimeout(() => {
-        const parryChance = 25 + (playerStats.Luwes * 2);
+        const parryChance = 25 + (playerStats.Luwes * 2.5);
         const canAttemptParry = (Math.random() * 100) <= parryChance;
 
         if (canAttemptParry) {
@@ -111,7 +123,7 @@ const CombatEngine = ({
             if (isParryWindowOpen.current) applyEnemyDamage(false);
           }, windowTime);
         } else {
-          setCombatLog(`${enemyData.name} menyerang secepat kilat!`);
+          setCombatLog(`${enemyData.name} menerjang dengan serangan mendadak!`);
           setTimeout(() => applyEnemyDamage(false), 600);
         }
       }, 1500);
@@ -120,7 +132,7 @@ const CombatEngine = ({
     }
   }, [turnState, playerStats.Luwes, applyEnemyDamage, enemyData.name]);
 
-  // --- 4. AKSI PEMAIN (TURN ENDING LOGIC) ---
+  // --- 4. AKSI PEMAIN ---
   const handleAction = (type, item = null, itemIndex = null) => {
     if (turnState !== 'PLAYER_TURN' || actionState !== 'IDLE') return;
     
@@ -129,46 +141,73 @@ const CombatEngine = ({
 
     if (type === 'RAGA') {
       setActionState('ATTACK');
-      dmg = getPlayerDmg('Kuat');
-      setUltimateBar(prev => Math.min(100, prev + 15)); // Serangan Raga menambah Saka
-      setCombatLog(`Serangan Raga menghunjam! -${dmg} HP.`);
+      if (enemyData.type === 'HUMAN' || enemyData.type === 'ANIMAL' || enemyData.type === 'CYBER') {
+        dmg = Math.round(getPlayerDmg('Kuat') * 1.25);
+        if (criticalHit.current) {
+          setCombatLog(`CRITICAL HIT! Serangan Raga efektif terhadap tipe ${enemyData.type}! -${dmg} Vitalitas.`);
+        }
+        else{
+          setCombatLog(`Serangan Raga efektif terhadap tipe ${enemyData.type}! -${dmg} Vitalitas.`);
+        }
+      }
+      else {
+        dmg = getPlayerDmg('Kuat');
+        if (criticalHit.current) {
+          setCombatLog(`CRITICAL HIT! Serangan Raga menghunjam! -${dmg} Vitalitas.`);
+        }
+        else{
+          setCombatLog(`Serangan Raga menghunjam! -${dmg} Vitalitas.`);
+        }
+      }
+      setUltimateBar(prev => Math.min(100, prev + 15));
+      criticalHit.current = false;
     } 
     else if (type === 'KARSA') {
       setActionState('ATTACK');
-      dmg = getPlayerDmg('Mistis');
-      setUltimateBar(prev => Math.min(100, prev + 20)); // Karsa menambah Saka lebih banyak
-      setCombatLog(`Karsa murni membakar sukma! -${dmg} HP.`);
+      if (enemyData.type === 'SPIRIT' || enemyData.type === 'BOSS') {
+        dmg = Math.round(getPlayerDmg('Mistis') * 1.25);
+        if (criticalHit.current) {
+          setCombatLog(`CRITICAL HIT! Serangan Karsa sangat efektif terhadap tipe ${enemyData.type}! -${dmg} Vitalitas.`);
+        }
+        else {
+          setCombatLog(`Serangan Karsa sangat efektif terhadap tipe ${enemyData.type}! -${dmg} Vitalitas.`);
+        }
+      }
+      else {
+        dmg = getPlayerDmg('Mistis');
+        if (criticalHit.current) {
+          setCombatLog(`CRITICAL HIT! Serangan Karsa membakar sukma lawan! -${dmg} Vitalitas.`);
+        }
+        else{
+          setCombatLog(`Karsa murni membakar sukma lawan! -${dmg} Vitalitas.`);
+        }
+      }
+      setUltimateBar(prev => Math.min(100, prev + 20));
+      criticalHit.current = false;
     } 
     else if (type === 'ULTIMATE') {
       setActionState('ULTIMATE');
-      dmg = Math.round((playerStats.Kuat + playerStats.Mistis) * 2.8);
+      dmg = Math.round(((playerStats.Kuat) + (playerStats.Mistis)) * 3);
       setUltimateBar(0);
-      setCameraShake(50);
-      setCombatLog("PAMUNGKAS: SAKA MEMBELAH TAKDIR!");
+      setCameraShake(40);
+      setCombatLog("PAMUNGKAS: SAKA MEMBELAH TAKDIR! - " + dmg + " Vitalitas.");
     } 
     else if (type === 'ITEM' && item) {
-      // PENGGUNAAN ITEM: Mengakhiri giliran seperti Pokemon
-      if (item.effect.hp) setBattleHp(p => Math.min(maxBattleHp, p + item.effect.hp));
-      
-      // Hapus item dari inventory global (App.jsx)
+      if (item.effect?.hp) setBattleHp(p => Math.min(maxBattleHp, p + item.effect.hp));
       if (onItemUsed) onItemUsed(itemIndex);
       
       setCombatLog(`Menggunakan ${item.name}. Vitalitas pulih.`);
       setShowInventory(false);
       
-      // Transisi langsung ke giliran musuh tanpa memberi damage
-      setTimeout(() => {
-        setTurnState('ENEMY_TURN');
-      }, 1000);
+      setTimeout(() => { setTurnState('ENEMY_TURN'); }, 1000);
       return; 
     }
 
-    // Eksekusi Damage & Transisi Giliran untuk Serangan
     setTimeout(() => {
       if (dmg > 0) setEnemyHp(prev => Math.max(0, prev - dmg));
       setTimeout(() => {
         setActionState('IDLE');
-        if (enemyHp - dmg <= 0) onVictory();
+        if (enemyHp - dmg <= 0) onVictory(enemyData.xpGain, enemyData.goldGain);
         else setTurnState('ENEMY_TURN');
       }, 600);
     }, 600);
@@ -177,56 +216,57 @@ const CombatEngine = ({
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-[#020202] font-serif text-white">
       {/* Visual Shaker */}
-      <div className="absolute inset-0 transition-transform duration-75" style={{ transform: `translate(${Math.random() * cameraShake}px, ${Math.random() * cameraShake}px)` }}>
+      <div 
+        className="absolute inset-0 transition-transform duration-75" 
+        style={{ transform: `translate(${Math.random() * cameraShake}px, ${Math.random() * cameraShake}px)` }}
+      >
         <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/asfalt-dark.png')] opacity-20" />
       </div>
 
-{/* HEADER HUD: VITALITAS & SAKA */}
+      {/* HEADER HUD (UTUH & DINAMIS) */}
       <div className="absolute top-12 left-0 w-full px-20 flex justify-between z-50">
         
-        {/* PLAYER SIDE (LEFT) */}
+        {/* PLAYER SIDE */}
         <div className="space-y-4">
           <div className="flex items-end space-x-4">
             <h2 className="font-['Cinzel'] text-2xl tracking-[0.4em] text-[#d4af37] font-black uppercase">
-              {player.name || "Pahlawan"}
+              {playerStats.name || "Pahlawan"}
             </h2>
-            {/* HP Numbers Player */}
             <span className="mb-1 font-['Cinzel'] text-[14px] text-[#ef4444] tracking-widest font-bold opacity-80">
               {Math.ceil(battleHp)} <span className="opacity-30 text-white">/</span> {maxBattleHp}
             </span>
           </div>
 
           <div className="relative">
-            {/* Bar Vitalitas Player */} 
+            {/* Health Bar with Tapered Clip-Path */}
             <div 
-                className="h-[14px] w-120 bg-white/5 relative border-l border-white/20"
-                style={{ clipPath: 'polygon(100% 60%, 25% 20%, 0% 0%, 5% 80%, 80% 100%)' }}
+              className="h-[14px] w-96 bg-white/5 relative border-l border-white/20"
+              style={{ clipPath: 'polygon(100% 60%, 25% 20%, 0% 0%, 5% 80%, 80% 100%)' }}
             >
-                <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: `${(battleHp / maxBattleHp) * 100}%` }}
-                    className="h-full bg-gradient-to-r from-[#7f1d1d] via-[#b91c1c] to-[#ef4444] shadow-[0_0_15px_rgba(239,68,68,0.3)]"
-                />
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: `${(battleHp / maxBattleHp) * 100}%` }}
+                className="h-full bg-gradient-to-r from-[#7f1d1d] via-[#b91c1c] to-[#ef4444] shadow-[0_0_15px_rgba(239,68,68,0.5)]"
+              />
             </div>
 
-            {/* BAR SAKA (ENERGY ULTIMATE) */}
-            <div                 
-                className="h-[5px] w-60 bg-white/5 relative border-l border-white/20 mt-2"
-                style={{ clipPath: 'polygon(100% 60%, 25% 20%, 0% 0%, 5% 80%, 80% 100%)' }}
+            {/* Saka/Ultimate Bar */}
+            <div                 
+              className="h-[5px] w-64 bg-white/5 relative border-l border-white/20 mt-2"
+              style={{ clipPath: 'polygon(100% 60%, 25% 20%, 0% 0%, 5% 80%, 80% 100%)' }}
             >
-                <motion.div 
-                    className="h-full bg-[#d4af37] shadow-[0_0_10px_#d4af37]" 
-                    animate={{ width: `${ultimateBar}%` }} 
-                />
+              <motion.div 
+                className="h-full bg-[#d4af37] shadow-[0_0_10px_#d4af37]" 
+                animate={{ width: `${ultimateBar}%` }} 
+              />
             </div>
           </div>
         </div>
 
-        {/* ENEMY SIDE (RIGHT) */}
+        {/* ENEMY SIDE */}
         <div className="text-right space-y-4">
           <div className="flex items-end justify-end space-x-4">
-            {/* HP Numbers Enemy */}
             <span className="mb-1 font-['Cinzel'] text-[14px] text-white/40 tracking-widest font-bold">
               {Math.ceil(enemyHp)} <span className="opacity-20 text-white">/</span> {enemyData.hp}
             </span>
@@ -234,7 +274,7 @@ const CombatEngine = ({
           </div>
 
           <div 
-            className="h-[14px] w-120 bg-white/5 relative border-l border-white/20 ml-auto"
+            className="h-[14px] w-96 bg-white/5 relative border-l border-white/20 ml-auto"
             style={{ clipPath: 'polygon(0% 60%, 75% 20%, 100% 0%, 95% 80%, 20% 100%)' }}
           >
             <motion.div 
@@ -243,16 +283,19 @@ const CombatEngine = ({
             />
           </div>
           
-          {/* Label Tipe Musuh (Opsional untuk estetika) */}
           <div className="text-[9px] tracking-[0.6em] text-white/30 font-black uppercase">
             {enemyData.type || "Entitas Asing"}
           </div>
         </div>
       </div>
 
-      {/* MEDAN TEMPUR: SPRITES */}
+      {/* MEDAN TEMPUR & SPRITES */}
       <div className="relative h-full flex items-center justify-center pointer-events-none">
-        <motion.div animate={{ x: turnState === 'ENEMY_TURN' || turnState === 'PARRY_WINDOW' ? -80 : 0 }} className="ml-64 relative">
+        {/* Enemy Sprite */}
+        <motion.div 
+          animate={{ x: turnState === 'ENEMY_TURN' || turnState === 'PARRY_WINDOW' ? -80 : 0 }} 
+          className="ml-64 relative"
+        >
           <img src={enemyData.image} className="h-[550px] object-contain brightness-75 contrast-125" alt="Enemy" />
           <AnimatePresence>
             {turnState === 'PARRY_WINDOW' && (
@@ -267,35 +310,37 @@ const CombatEngine = ({
           </AnimatePresence>
         </motion.div>
 
+        {/* Player Sprite */}
         <motion.div 
           className="absolute bottom-[-100px] left-[5%]"
           animate={{ 
             x: actionState === 'ATTACK' ? 220 : 0, 
-            y: actionState === 'HURT' ? 30 : 0,
+            y: actionState === 'ULTIMATE' ? -180 : actionState === 'HURT' ? 30 : 0,
             scale: actionState === 'ULTIMATE' ? 1.35 : 1,
             rotate: actionState === 'HURT' ? -10 : 0,
             filter: actionState === 'ULTIMATE' ? 'brightness(1.5) drop-shadow(0 0 30px #d4af37)' : 'none'
           }}
+          transition={{ type: 'spring', stiffness: 100 }}
         >
           <img src={actionState === 'ULTIMATE' ? playerStats.imgUlt : actionState === 'ATTACK' ? playerStats.imgAtk : playerStats.imgIdle} className="h-[950px] object-contain" alt="Hero" />
         </motion.div>
       </div>
 
-      {/* PUSAT KOMANDO */}
+      {/* COMMAND CENTER */}
       <div className="absolute bottom-0 w-full p-12 bg-gradient-to-t from-black flex justify-between items-end z-[70]">
         <div className="max-w-xl border-l-4 border-[#d4af37]/20 pl-10">
           <AnimatePresence mode="wait">
-            <motion.p key={combatLog} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-['Cormorant_Garamond'] text-2xl italic leading-tight text-gray-200 mb-10">
+            <motion.p key={combatLog} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="font-['Cormorant_Garamond'] text-2xl italic leading-tight text-gray-200 mb-10">
               "{combatLog}"
             </motion.p>
           </AnimatePresence>
         </div>
+
         <div className="flex space-x-6 bg-black/60 p-6 border border-white/5 backdrop-blur-md shadow-2xl">
           <BattleBtn icon={<Swords size={32}/>} label="Raga" onClick={() => handleAction('RAGA')} active={turnState === 'PLAYER_TURN'} />
           <BattleBtn icon={<Zap size={32}/>} label="Karsa" onClick={() => handleAction('KARSA')} active={turnState === 'PLAYER_TURN'} />
           <BattleBtn icon={<Heart size={32}/>} label="Bekal" onClick={() => setShowInventory(true)} active={turnState === 'PLAYER_TURN'} />
           
-          {/* TOMBOL SAKA (ULTIMATE) */}
           <BattleBtn 
             icon={<Flame size={32}/>} 
             label="Sakti" 
@@ -322,9 +367,11 @@ const CombatEngine = ({
                     onClick={() => handleAction('ITEM', item, i)} 
                     className="p-8 border border-white/5 hover:border-[#d4af37]/50 text-left bg-white/[0.01] hover:bg-[#d4af37]/5 transition-all group"
                   >
-                    <h3 className="font-['Cinzel'] text-2xl text-white group-hover:text-[#d4af37] mb-2">{item.name}</h3>
+                    <h3 className="font-['Cinzel'] text-2xl text-white group-hover:text-[#d4af37] mb-2 uppercase">{item.name}</h3>
                     <p className="font-serif text-white/30 italic text-sm leading-relaxed">"{item.description}"</p>
-                    <div className="mt-4 text-[10px] text-[#d4af37] font-black tracking-widest uppercase">Pilih untuk menggunakan</div>
+                    <div className="mt-4 text-[10px] text-[#d4af37] font-black tracking-widest uppercase flex items-center">
+                      <Zap size={10} className="mr-2" /> Ketuk untuk memulihkan karsa
+                    </div>
                   </button>
                 ))}
               </div>
@@ -346,7 +393,7 @@ const BattleBtn = ({ icon, label, onClick, active = true, danger = false, isSakt
         'border-white/10 hover:border-[#d4af37] text-white/30 hover:text-[#d4af37] hover:bg-[#d4af37]/5'}
     `}
   >
-    <div className="mb-3 transition-transform group-hover:scale-110">{icon}</div>
+    <div className="mb-3 transition-transform group-hover:scale-110 group-active:scale-90">{icon}</div>
     <span className="text-[10px] font-['Cinzel'] tracking-[0.4em] font-black uppercase">{label}</span>
     {active && !danger && <div className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#d4af37] group-hover:w-full transition-all duration-700 shadow-[0_0_15px_#d4af37]" />}
   </button>

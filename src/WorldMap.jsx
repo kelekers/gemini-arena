@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MAP_ASSETS, ISLANDS } from './Constants';
-import { Lock, ChevronRight, Info, ShieldAlert } from 'lucide-react';
+import { Lock, ChevronRight, Info, ShieldAlert, ShieldCheck } from 'lucide-react';
 
-const WorldMap = ({ onSelectIsland }) => {
+const WorldMap = ({ onSelectIsland, storyFlags = {} }) => {
   const [hoveredId, setHoveredId] = useState(null);
   const [lockedId, setLockedId] = useState(null);
 
@@ -11,8 +11,16 @@ const WorldMap = ({ onSelectIsland }) => {
   // tapi jika tidak ada klik, baru gunakan Hover.
   const activeId = lockedId || hoveredId || ISLANDS[0].id;
   const activeIsland = ISLANDS.find(is => is.id === activeId);
+  const activeStatus = useMemo(() => {
+    if (storyFlags[`${activeId}_FINISHED` || activeIsland?.isFinished]) return 'finished';
+    if (activeId === 'papua' || storyFlags[`${activeId}_UNLOCKED` || activeIsland?.isUnlocked]) return 'unlocked';
+    return 'locked';
+  }, [activeId, storyFlags, activeIsland]);
+
+  const isDisabled = activeStatus === 'locked' || activeStatus === 'finished';
   const assets = MAP_ASSETS[activeId] || {};
-  const isLocked = activeIsland?.status === 'locked';
+  const isLocked = activeStatus === 'locked';
+
 
   return (
     <div 
@@ -26,15 +34,36 @@ const WorldMap = ({ onSelectIsland }) => {
         <div className="absolute inset-0 bg-[url('https://placehold.co/1920x1080/050505/111')] bg-cover opacity-30 pointer-events-none" />
 
         {ISLANDS.map((island) => {
-          const islandStatus = island.status;
+          // Logika Penentu Status Pulau
+          const islandStatus = useMemo(() => {
+            const finished = storyFlags[`${island.id}_FINISHED` || island.isFinished];
+            const unlocked = island.id === 'papua' || storyFlags[`${island.id}_UNLOCKED` || island.isUnlocked];
+            
+            if (finished) return 'finished';
+            if (unlocked) return 'unlocked';
+            return 'locked';
+          }, [island.id, storyFlags]);
           const isThisHovered = hoveredId === island.id;
           const isThisLocked = lockedId === island.id;
           const islandAssets = MAP_ASSETS[island.id] || {};
 
-          let currentImg = islandStatus === 'locked' ? islandAssets.idleLocked : islandAssets.idleUnlocked;
-          if (isThisHovered || isThisLocked) {
-            currentImg = islandStatus === 'locked' ? islandAssets.hoverLocked : islandAssets.hoverUnlocked;
+          // A. Tentukan Gambar Dasar berdasarkan status dan interaksi
+          const isInteractive = isThisHovered || isThisLocked;
+          let currentImg = islandAssets.idleUnlocked; // Default
+
+          if (islandStatus === 'locked') {
+            currentImg = isInteractive ? islandAssets.hoverLocked : islandAssets.idleLocked;
+          } else {
+            // Status 'unlocked' dan 'finished' menggunakan set gambar yang sama
+            currentImg = isInteractive ? islandAssets.hoverUnlocked : islandAssets.idleUnlocked;
           }
+
+          // B. Tentukan Efek Visual (Tailwind Class)
+          const statusClasses = useMemo(() => {
+            if (islandStatus === 'locked') return 'grayscale opacity-50 contrast-75';
+            if (islandStatus === 'finished') return 'sepia-[0.4] saturate-150 brightness-110 drop-shadow-[0_0_25px_rgba(212,175,55,0.5)]';
+            return 'drop-shadow-[0_0_20px_rgba(212,175,55,0.2)]';
+          }, [islandStatus]);
 
           return (
             <motion.div
@@ -60,18 +89,25 @@ const WorldMap = ({ onSelectIsland }) => {
               <motion.img
                 src={currentImg}
                 alt={island.name}
+                // Animate mengontrol interaksi (hover/click)
                 animate={{ 
                   scale: isThisHovered || isThisLocked ? 1.15 : 1,
-                  filter: isThisLocked ? 'brightness(1.2) contrast(1.1)' : 'brightness(1) contrast(1)'
+                  // Menambahkan sedikit efek 'lift' saat dipilih
+                  y: isThisLocked ? -10 : 0,
+                  // Filter di sini fokus pada feedback interaksi
+                  filter: isThisLocked 
+                    ? 'brightness(1.2) contrast(1.1) drop-shadow(0 0 20px rgba(212,175,55,0.4))' 
+                    : 'brightness(1) contrast(1)'
                 }}
-                className={`w-48 h-auto transition-all duration-500 ${islandStatus === 'locked' ? 'grayscale opacity-50' : 'drop-shadow-[0_0_20px_rgba(212,175,55,0.2)]'}`}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                // className mengontrol aura status wilayah (Locked/Unlocked/Finished)
+                className={`w-48 h-auto transition-all duration-700 pointer-events-none ${statusClasses}`}
               />
               
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                {islandStatus === 'locked' 
-                  ? <Lock className="text-white/40" size={20} /> 
-                  : <div className={`h-3 w-3 rounded-full ${isThisLocked ? 'bg-white' : 'bg-[#d4af37] animate-ping'}`} />
-                }
+                {islandStatus === 'locked' && <Lock className="text-white/40" size={20} />}
+                {islandStatus === 'unlocked' && <div className={`h-3 w-3 rounded-full ${isThisLocked ? 'bg-white' : 'bg-[#d4af37] animate-ping'}`} />}
+                {islandStatus === 'finished' && <ShieldCheck className="text-green-500 drop-shadow-[0_0_10px_rgba(34,197,94,0.5)]" size={22} />}
               </div>
             </motion.div>
           );
@@ -131,9 +167,10 @@ const WorldMap = ({ onSelectIsland }) => {
                     : 'border-[#d4af37]/40 text-[#d4af37] bg-[#d4af37]/5 hover:bg-[#d4af37] hover:text-black shadow-[0_0_30px_rgba(212,175,55,0.15)]'
                   }`}
               >
-                <span className="font-['Cinzel'] text-[11px] font-black tracking-[0.4em]">
-                  {isLocked ? 'AKSES TERBATAS' : 'MULAI EKSPEDISI'}
-                </span>
+              <span className="font-['Cinzel'] text-[11px] font-black tracking-[0.4em]">
+                {activeStatus === 'locked' ? 'AKSES TERBATAS' : 
+                activeStatus === 'finished' ? 'WILAYAH DAMAI' : 'MULAI EKSPEDISI'}
+              </span>
                 {!isLocked && <ChevronRight size={16} />}
               </button>
               

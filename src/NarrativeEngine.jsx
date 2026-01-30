@@ -1,22 +1,26 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Dices, ChevronRight, Zap, Plus, Equal, ScrollText, 
   Sparkles, Lock, Backpack, Swords, Ghost, History,
-  Skull, Heart, AlertTriangle, ShieldCheck
+  Skull, Heart, AlertTriangle, ShieldCheck, Star, Map as MapIcon
 } from 'lucide-react';
 
 /**
- * NARRATIVE ENGINE V4 - SINERGI TAKDIR & PERCABANGAN PERTEMPURAN
- * Engine ini mengelola dialog, pengecekan stat (Base 30), dan transisi ke CombatEngine.
+ * NARRATIVE ENGINE V5 - SINERGI TAKDIR, KARMA & TRANSISI WILAYAH
+ * Engine ini mengelola dialog, pengecekan stat (Base 30), Hidden Karma, dan transisi antar pulau.
+ * REVISI: Implementasi Leader-Based Alignment Filtering untuk Ending.
  */
 const NarrativeEngine = ({ 
   playerStats, 
   playerInventory = [],
+  alignmentScore = { PRESERVATION: 0, DOMINATION: 0, CORRUPTION: 0 },
   storyNodes, 
   startNodeId, 
   onEventEnd, 
   onStatChange,
+  onGuldenChange,
+  onXpChange,
   onFlagUpdate, 
   onBattleTrigger 
 }) => {
@@ -28,16 +32,17 @@ const NarrativeEngine = ({
   const [checkOutcome, setCheckOutcome] = useState(null); 
   const [showHistory, setShowHistory] = useState(false);
   const [isGlitching, setIsGlitching] = useState(false);
+  
+  const scrollRef = useRef(null);
+  const node = storyNodes[currentNodeId] || { text: "Fragmen waktu tidak ditemukan...", options: [], image: "" };
 
-  const node = storyNodes[currentNodeId];
-
-  // Sinkronisasi Node Awal (Penting jika berpindah region)
   useEffect(() => {
     if (startNodeId) setCurrentNodeId(startNodeId);
   }, [startNodeId]);
 
-  // Efek Glitch Visual Sinematik
   useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+    
     if (node?.glitch) {
       setIsGlitching(true);
       const timer = setTimeout(() => setIsGlitching(false), 800);
@@ -45,23 +50,34 @@ const NarrativeEngine = ({
     }
   }, [currentNodeId, node]);
 
-  // --- 1. SISTEM PENGECEKAN PERSYARATAN (ITEM & STAT) ---
+  // --- 1. SISTEM PENGECEKAN PERSYARATAN (ITEM, STAT, & KARMA) ---
   const checkOptionAvailability = (option) => {
-    // A. Item Requirement (Check Inventory)
+    // A. HIDDEN KARMA CHECK
+    if (option.minAlignment) {
+      const isKarmaEnough = Object.entries(option.minAlignment).every(([key, value]) => {
+        return (alignmentScore[key] || 0) >= value;
+      });
+      if (!isKarmaEnough) return { available: false, hidden: true, reason: 'KARMA_INSUFFICIENT' };
+    }
+
+    // B. Item Requirement
     if (option.itemRequirement) {
       const hasItem = playerInventory.some(item => item.id === option.itemRequirement.id);
       if (!hasItem) return { available: false, reason: 'ITEM_MISSING' };
     }
-    // B. Hard Stat Requirement (Minimum threshold tanpa dadu)
+
+    // C. Hard Stat Requirement
     if (option.minStat) {
       const { stat, value } = option.minStat;
       if (playerStats[stat] < value) return { available: false, reason: 'STAT_LOW' };
     }
-    // C. Kondisi HP (Mencegah aksi tertentu jika sekarat)
+
+    // D. Kondisi HP
     if (option.requireHealthy && playerStats.hp < 15) {
       return { available: false, reason: 'WOUNDED' };
     }
-    return { available: true };
+
+    return { available: true, hidden: false };
   };
 
   // --- 2. SISTEM KALKULASI TAKDIR (BASE 30 CALIBRATION) ---
@@ -78,15 +94,13 @@ const NarrativeEngine = ({
       const statValue = playerStats[statName] || 0;
       const dcGoal = choice.requirement.dc || 10;
       
-      // FORMULA TAKDIR: Stat/3 + Pulung/6 + Dadu 1-10
-      const statBonus = Math.floor(statValue / 3);
+      const statBonus = Math.floor(statValue / 2);
       const luckBonus = Math.floor((playerStats.Pulung || 0) / 6); 
 
       setTimeout(() => {
         const roll = Math.floor(Math.random() * 10) + 1;
         const total = roll + statBonus + luckBonus;
         
-        // Takdir Mutlak (Criticals)
         let isSuccess = roll === 10 ? true : (roll === 1 ? false : total >= dcGoal);
 
         setRollData({ roll, bonus: statBonus, luck: luckBonus, total, dc: dcGoal, statName });
@@ -107,33 +121,66 @@ const NarrativeEngine = ({
     }
   };
 
-  // --- 3. RESOLUSI TAKDIR & BRANCHING LOGIC ---
+// --- 3. RESOLUSI TAKDIR (REVISI: Transition Lock) ---
   const resolveChoice = (choice, isSuccess) => {
     const nextNodeId = isSuccess ? choice.nextNode : (choice.failNode || choice.nextNode);
     const targetNode = storyNodes[nextNodeId];
 
-    // Jalankan Side-Effects Narasi
+    // Eksekusi Side-Effects
     if (choice.damage && !isSuccess) onStatChange({ hp: -choice.damage });
     if (choice.rewardStat) onStatChange(choice.rewardStat);
+    if (choice.rewardGulden) onGuldenChange(choice.rewardGulden);
     if (choice.alignment) onFlagUpdate(choice.alignment);
+    if (choice.rewardXp) onXpChange(choice.rewardXp);
 
-    // Deteksi Pemicu Pertempuran (Branching Support)
-    if (targetNode?.type === 'BATTLE_TRIGGER') {
-      // Mengirimkan currentNodeId agar App.jsx tahu di mana titik kembali
-      onBattleTrigger(targetNode.enemyId, nextNodeId); 
-      return;
-    }
-
-    // Deteksi Akhir Wilayah
-    if (targetNode?.type === 'END_REGION') {
-      onEventEnd(targetNode.targetIsland);
-      return;
+    // Filter Transisi: Jangan langsung panggil onEventEnd agar node sempat dirender
+    if (targetNode?.type && targetNode.type !== 'STORY') {
+      if (targetNode.type === 'BATTLE_TRIGGER') {
+        onBattleTrigger(targetNode.enemyId || null, nextNodeId); 
+        return;
+      }
+      if (targetNode.type === 'ENDING') {
+        onBattleTrigger(null, nextNodeId); 
+        return;
+      }
+      // Khusus REGION_TRANSITION, kita biarkan setCurrentNodeId berjalan
+      // agar pemain bisa membaca teks "End Region" tersebut.
     }
 
     setCurrentNodeId(nextNodeId);
   };
 
-  // State Hampa (Loading)
+  // --- 4. RENDERER FILTERING (LOGIKA JATI DIRI / HIGHEST ALIGNMENT) ---
+  const visibleOptions = useMemo(() => {
+    const options = node.options || [];
+    // Deteksi jika node ini mengandung pilihan berbasis Jati Diri (Alignment)
+    const hasAlignmentBranch = options.some(opt => opt.minAlignment);
+
+    if (hasAlignmentBranch) {
+      // Cari nilai tertinggi di antara ketiga kategori alignment
+      const maxVal = Math.max(
+        alignmentScore.PRESERVATION, 
+        alignmentScore.DOMINATION, 
+        alignmentScore.CORRUPTION
+      );
+
+      return options.filter(opt => {
+        const status = checkOptionAvailability(opt);
+        if (status.hidden) return false;
+
+        // Jika opsi ini adalah jalur alignment, tampilkan hanya jika nilainya adalah yang tertinggi (Leader)
+        if (opt.minAlignment) {
+          const alignmentKey = Object.keys(opt.minAlignment)[0];
+          return (alignmentScore[alignmentKey] || 0) === maxVal;
+        }
+        return true;
+      });
+    }
+
+    // Filter standar jika bukan node ending/alignment check
+    return options.filter(opt => !checkOptionAvailability(opt).hidden);
+  }, [node.options, alignmentScore, playerInventory, playerStats.hp]);
+
   if (!node) return (
     <div className="h-screen bg-black flex flex-col items-center justify-center space-y-6">
       <Sparkles className="text-[#d4af37] animate-spin" size={64} />
@@ -163,7 +210,6 @@ const NarrativeEngine = ({
         {/* KIRI: PANEL INTERAKSI (45%) */}
         <section className="w-[45%] h-full flex flex-col p-12 lg:p-20 bg-gradient-to-r from-black via-black/60 to-transparent">
           
-          {/* Visual Scene Placeholder */}
           <div className="relative w-[50%] aspect-[16/9] mb-4 group shadow-2xl">
             <div className="absolute inset-0 border border-[#d4af37]/20 z-20 pointer-events-none" />
             <AnimatePresence mode="wait">
@@ -179,9 +225,8 @@ const NarrativeEngine = ({
             <div className="absolute -bottom-1 -right-1 w-6 h-6 border-b-2 border-r-2 border-[#d4af37] z-30" />
           </div>
 
-          {/* Kolom Pilihan Percabangan */}
-          <div className="flex-1 flex flex-col space-y-4 overflow-y-auto custom-scrollbar pr-6 pb-10">
-            {!isRolling && node.options.map((opt, i) => {
+          <div ref={scrollRef} className="flex-1 flex flex-col space-y-4 overflow-y-auto custom-scrollbar pr-6 pb-10">
+            {!isRolling && visibleOptions.map((opt, i) => {
               const status = checkOptionAvailability(opt);
               return (
                 <button
@@ -194,7 +239,6 @@ const NarrativeEngine = ({
                       : 'bg-white/[0.01] border-white/5 opacity-40 cursor-not-allowed grayscale'}`}
                 >
                   <div className="flex flex-col space-y-2">
-                    {/* Badge Persyaratan */}
                     <div className="flex space-x-4">
                       {opt.requirement && (
                         <div className="flex items-center space-x-2 text-[#d4af37]">
@@ -208,6 +252,12 @@ const NarrativeEngine = ({
                           <span className="text-[9px] tracking-[0.2em] uppercase font-black">Butuh: {opt.itemRequirement.id.replace('_', ' ')}</span>
                         </div>
                       )}
+                      {opt.minAlignment && (
+                        <div className="flex items-center space-x-2 text-[#d4af37]">
+                          <Star size={10} className="animate-pulse" />
+                          <span className="text-[9px] tracking-[0.2em] uppercase font-black">Jalur Jati Diri Terbuka</span>
+                        </div>
+                      )}
                     </div>
 
                     <span className={`font-['Cinzel'] text-sm tracking-widest leading-relaxed transition-colors
@@ -219,24 +269,38 @@ const NarrativeEngine = ({
                   {status.available ? (
                     <ChevronRight size={18} className="text-white/10 group-hover:text-[#d4af37] transition-all transform group-hover:translate-x-1" />
                   ) : (
-                    <Lock size={14} className="text-white/10" />
+                    <div className="flex flex-col items-end">
+                       <Lock size={14} className="text-white/10" />
+                       <span className="text-[7px] text-red-500/40 uppercase mt-1 tracking-tighter">{status.reason}</span>
+                    </div>
                   )}
 
-                  {/* Underline Progress Hover */}
                   {status.available && (
                     <motion.div className="absolute bottom-0 left-0 h-[1px] bg-[#d4af37] w-0 group-hover:w-full transition-all duration-700" />
                   )}
                 </button>
               );
             })}
+
+            {/* REVISI: Tombol Khusus untuk Transisi Wilayah */}
+            {!isRolling && (node.type === 'REGION_TRANSITION' || node.type === 'END_REGION') && (
+              <motion.button
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                onClick={() => onEventEnd(node.targetIsland)}
+                className="group relative w-full p-6 border-2 border-[#d4af37]/40 bg-[#d4af37]/10 hover:bg-[#d4af37]/20 transition-all flex items-center justify-center space-x-4 shadow-[0_0_30px_rgba(212,175,55,0.15)]"
+              >
+                <MapIcon size={24} className="text-[#d4af37] group-hover:rotate-12 transition-transform" />
+                <span className="font-['Cinzel'] text-lg tracking-[0.4em] font-black text-white uppercase">Lanjutkan Perjalanan</span>
+                <ChevronRight size={24} className="text-[#d4af37] animate-bounce-x" />
+              </motion.button>
+            )}
           </div>
         </section>
 
         {/* KANAN: PANEL NARASI (55%) */}
         <section className="w-[55%] h-full flex flex-col p-20 lg:p-32 bg-gradient-to-l from-black via-transparent to-transparent">
           <div className="mt-auto max-w-2xl relative">
-            
-            {/* ERA & TANGGAL */}
             <div className="mb-12 relative">
               <span className="text-[10px] tracking-[0.8em] text-[#d4af37] font-black uppercase opacity-60 flex items-center mb-4">
                 <History size={14} className="mr-4" /> Babad Nusantara
@@ -246,7 +310,6 @@ const NarrativeEngine = ({
               </h3>
             </div>
 
-            {/* SPEAKER TAG */}
             <div className="inline-block px-10 py-3 bg-[#5a0c0c] border-l-4 border-[#d4af37] mb-10 shadow-2xl relative">
               <div className="absolute -inset-1 bg-[#d4af37]/5 blur-sm" />
               <span className="font-['Cinzel'] text-[11px] tracking-[0.6em] font-black text-white relative z-10 uppercase">
@@ -254,7 +317,6 @@ const NarrativeEngine = ({
               </span>
             </div>
 
-            {/* MAIN NARRATIVE TEXT */}
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentNodeId}
@@ -268,7 +330,6 @@ const NarrativeEngine = ({
                   "{node.text}"
                 </p>
                 
-                {/* Visual Feedback Vitalitas Rendah */}
                 {playerStats.hp < 20 && (
                   <div className="flex items-center space-x-3 text-red-500/60 animate-pulse">
                     <Heart size={14} />
@@ -278,7 +339,6 @@ const NarrativeEngine = ({
               </motion.div>
             </AnimatePresence>
 
-            {/* ACTION: ARSIP PANEL */}
             <div className="mt-20">
               <button 
                 onClick={() => setShowHistory(true)}
@@ -325,7 +385,6 @@ const NarrativeEngine = ({
                 <div className="absolute inset-0 border-2 border-[#d4af37]/10 rounded-full animate-ping" />
               </div>
 
-              {/* MATH BREAKDOWN (Base 30 Analysis) */}
               <div className="mt-24 h-40 flex flex-col items-center">
                 {showMath && (
                   <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center space-y-10">
@@ -341,13 +400,13 @@ const NarrativeEngine = ({
                       </div>
                       <Plus size={24} className="text-green-500 mt-8" />
                       <div className="text-center">
-                        <span className="block text-[10px] text-green-500/60 tracking-widest mb-3 uppercase">Pulung</span>
+                        <span className="block text-[10px] text-green-500/60 tracking-widest mb-3 uppercase">Keberuntungan</span>
                         <span className="text-green-500">{rollData.luck}</span>
                       </div>
                       <Equal size={24} className="text-white/10 mt-8" />
                       <div className={`text-center px-10 border-b-4 ${checkOutcome === 'success' ? 'border-green-500 text-green-500 shadow-[0_15px_30px_rgba(34,197,94,0.2)]' : 'border-red-600 text-red-600 shadow-[0_15px_30px_rgba(220,38,38,0.2)]'}`}>
                         <span className="block text-[10px] text-white/30 tracking-widest mb-3 uppercase">Total</span>
-                        <span>{rollData.total}</span>
+                        <span className="text-white/90">{rollData.total}</span>
                       </div>
                     </div>
                     <span className="text-[11px] tracking-[0.8em] text-white/20 uppercase font-bold">Ambang Takdir (DC): {rollData.dc}</span>
@@ -355,7 +414,6 @@ const NarrativeEngine = ({
                 )}
               </div>
 
-              {/* FINAL OUTCOME MESSAGE */}
               <AnimatePresence>
                 {checkOutcome && (
                   <motion.div 
@@ -400,7 +458,7 @@ const NarrativeEngine = ({
                   <div className="h-[4px] w-32 bg-red-900 shadow-[0_0_15px_rgba(127,29,29,0.5)]" />
                 </div>
 
-                <div className="relative w-64 aspect-video bg-black border border-white/10 group overflow-hidden shadow-2xl">
+                <div className="relative w-full aspect-video bg-black border border-white/10 group overflow-hidden shadow-2xl">
                   <img 
                     src={node.historyImage || node.image} 
                     className="w-full h-full object-cover grayscale brightness-50 group-hover:brightness-100 group-hover:scale-110 transition-all duration-[2.5s] ease-out" 
@@ -415,7 +473,7 @@ const NarrativeEngine = ({
 
                 <div className="relative">
                   <p className="font-['Cormorant_Garamond'] text-md text-justify leading-relaxed text-gray-400 italic first-letter:text-4xl first-letter:text-[#d4af37] first-letter:float-left first-letter:mr-4 first-letter:font-['Cinzel'] first-letter:font-black first-letter:drop-shadow-[0_0_10px_rgba(212,175,55,0.4)]">
-                    {node.historyText || "Halaman ini telah dimakan oleh rayap waktu. Tak ada lagi catatan yang bisa terbaca dari era ini."}
+                    {node.historyText || "Halaman ini telah dimakan oleh rayap waktu..."}
                   </p>
                 </div>
               </div>

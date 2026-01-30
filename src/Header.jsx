@@ -68,7 +68,7 @@ const Header = ({
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full z-[100] pointer-events-none p-10 select-none">
+    <header className="absolute top-0 left-0 w-full z-[100] pointer-events-none p-10 select-none">
       {/* Cinematic Top Vignette - Memberikan kedalaman pada UI */}
       <div className="absolute inset-0 h-56 bg-gradient-to-b from-black/95 via-black/40 to-transparent pointer-events-none" />
       
@@ -131,42 +131,42 @@ const Header = ({
               </div>
             </div>
 
-          <div className="flex flex-col space-y-4 pt-1">
-            {/* HP BAR (Red Tapered) */}
-            <div className="relative flex items-center group">
-              <div 
-                className="h-[6px] w-48 bg-white/5 relative border-l border-white/20"
-                style={{ clipPath: 'polygon(100% 60%, 25% 20%, 0% 0%, 5% 80%, 80% 100%)' }}
-              >
-                <motion.div 
-                  initial={{ width: 0 }}
-                  animate={{ width: `${hpPercent}%` }}
-                  className="h-full bg-gradient-to-r from-[#7f1d1d] via-[#b91c1c] to-[#ef4444] shadow-[0_0_15px_rgba(239,68,68,0.3)]"
-                />
+            <div className="flex flex-col space-y-4 pt-1">
+              {/* HP BAR (Red Tapered) */}
+              <div className="relative flex items-center group">
+                <div 
+                  className="h-[6px] w-48 bg-white/5 relative border-l border-white/20"
+                  style={{ clipPath: 'polygon(100% 60%, 25% 20%, 0% 0%, 5% 80%, 80% 100%)' }}
+                >
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${hpPercent}%` }}
+                    className="h-full bg-gradient-to-r from-[#7f1d1d] via-[#b91c1c] to-[#ef4444] shadow-[0_0_15px_rgba(239,68,68,0.3)]"
+                  />
+                </div>
+                <span className="ml-4 font-['Cinzel'] text-[9px] text-[#ef4444] tracking-widest font-bold opacity-80">
+                  {stats.hp} <span className="opacity-30 text-white">/</span> {maxHp}
+                </span>
               </div>
-              <span className="ml-4 font-['Cinzel'] text-[9px] text-[#ef4444] tracking-widest font-bold opacity-80">
-                {stats.hp} <span className="opacity-30 text-white">/</span> {maxHp}
-              </span>
-            </div>
 
-            {/* XP BAR (Blue Tapered) */}
-            <div className="relative flex items-center">
-              <div 
-                className="h-[3px] w-40 bg-white/5 relative border-l border-white/10"
-                style={{ clipPath: 'polygon(100% 60%, 25% 20%, 0% 0%, 5% 80%, 80% 100%)' }}
-              >
-                <motion.div 
-                  initial={{ width: 0 }}
-                  animate={{ width: `${xpPercent}%` }}
-                  className="h-full bg-gradient-to-r from-[#1e3a8a] via-[#3b82f6] to-[#60a5fa] shadow-[0_0_10px_rgba(59,130,246,0.3)]"
-                />
+              {/* XP BAR (Blue Tapered) */}
+              <div className="relative flex items-center">
+                <div 
+                  className="h-[3px] w-40 bg-white/5 relative border-l border-white/10"
+                  style={{ clipPath: 'polygon(100% 60%, 25% 20%, 0% 0%, 5% 80%, 80% 100%)' }}
+                >
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${xpPercent}%` }}
+                    className="h-full bg-gradient-to-r from-[#1e3a8a] via-[#3b82f6] to-[#60a5fa] shadow-[0_0_10px_rgba(59,130,246,0.3)]"
+                  />
+                </div>
+                <span className="ml-4 font-['Cinzel'] text-[8px] text-blue-400 tracking-[0.2em] font-bold opacity-70">
+                  {xp} <span className="opacity-30 text-white">/</span> {nextXp}
+                </span>
               </div>
-              <span className="ml-4 font-['Cinzel'] text-[8px] text-blue-400 tracking-[0.2em] font-bold opacity-70">
-                {xp} <span className="opacity-30 text-white">/</span> {nextXp}
-              </span>
             </div>
           </div>
-        </div>
         </div>
 
         {/* --- BAGIAN TENGAH: NAVIGASI UTAMA & LOKASI --- */}
