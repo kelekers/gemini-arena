@@ -152,33 +152,41 @@ export const PROLOGUE_SCENES = [
   {
     id: 1,
     year: "2120 M",
-    location: "BATAVIA-PRIME",
-    text: "Nusantara telah lama mati. Megastruktur logam VOC menghisap karsa dari setiap raga yang tersisa. Keabadian tanpa kehendak adalah hukuman bagi kita semua.",
+    location: "BATAVIA-PRIME (DISTRIK PUSAT)",
+    text: "Nusantara tidak pernah merdeka. Di bawah langit ungu neon yang statis, Neo-VOC memerintah dengan tangan besi. Keabadian telah ditemukan, namun harganya adalah jiwa. Rakyat hidup selamanya sebagai 'Raga Tanpa Karsa'—sekadar baterai penyokong megastruktur kolonial.",
     image: "https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=2000", 
     glitch: true
   },
   {
     id: 2,
-    year: "2026 M",
-    location: "TITIK BALIK ALKIMIA",
-    text: "Semua bermula di sini. Penemuan 'Sang Tapa' merobek tirai waktu. Alkimia VOC masa depan mulai menjangkarkan pengaruhnya ke masa lalu, meracuni sejarah bangsa.",
+    year: "RETAK_WAKTU",
+    location: "RENGASDENGKLOK (GAGAL)",
+    text: "Semua bermula dari retakan di tahun 1945. Peristiwa Rengasdengklok tidak pernah terjadi. Para pemuda tertangkap, Soekarno-Hatta terisolasi, dan Proklamasi tertunda 5 tahun. Butterfly effect ini memberi celah bagi Entitas X—Sang Tapa—untuk meracuni sejarah Indonesia.",
     image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2000", 
     glitch: true
   },
   {
     id: 3,
-    year: "ERA ARKEOLOG",
-    location: "MUSEUM PUSAKA",
-    text: "Sang Saka... artefak yang dulu dianggap dongeng, ternyata adalah kunci. Saat jemarimu menyentuh kain merah-putih yang berdebu itu, realitas mulai runtuh.",
+    year: "2120 M",
+    location: "SITUS ARSIP NASIONAL",
+    text: "Di tengah reruntuhan ingatan bangsa, jemarimu menyentuh sehelai kain merah-putih yang berdenyut. Sang Saka. Ia adalah sisa kejayaan yang tidak mampu dihapus oleh algoritma Sang Tapa. Melalui kain ini, Nusantara memanggil pahlawannya.",
     image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=2000",
     glitch: false
   },
   {
     id: 4,
-    year: "AWAL EKSPEDISI",
-    location: "GERBANG TIMUR",
-    text: "Takdir menarikmu kembali. Kamu harus menghancurkan Jangkar Alkimia di setiap pulau. Ingatanmu akan memudar, namun kebebasan Nusantara harus ditebus.",
-    image: "https://images.unsplash.com/photo-1542332213-9b5a5a3fab35?q=80&w=2000",
+    year: "TRANSISI",
+    location: "AMBANG REALITAS",
+    text: "Sang Saka membisikkan satu perintah: 'Jahit kembali benang waktu.' Kamu dikirim ke masa lalu yang asli, ke era di mana budaya masih murni namun anomali Neo-VOC mulai bermunculan. Hancurkan Jangkar Alkimia, atau Batavia-Prime akan menjadi takdir abadi kita.",
+    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2000",
+    glitch: true
+  },
+  {
+    id: 5,
+    year: "1910 M",
+    location: "PESISIR LORENTZ, PAPUA",
+    text: "Lompatan waktu berhasil. Udara segar 1910 masuk ke paru-parumu, namun dengung statis di kejauhan menandakan Neo-VOC sudah mulai menjangkarkan pengaruhnya di sini. Ekspedisi dimulai.",
+    image: "https://images.unsplash.com/photo-1597892657493-4848d5c02914?q=80&w=2000",
     glitch: false
   }
 ];
