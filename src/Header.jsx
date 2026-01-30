@@ -23,7 +23,7 @@ const Header = ({
   
   // --- SINKRONISASI LOGIKA BASE 30 ---
   // maxHp dihitung dinamis dari stat Tahan pahlawan
-  const maxHp = stats.Tahan * 10;
+  const maxHp = (stats.Tahan * 15) + (level * 50);
   const hpPercent = Math.max(0, Math.min(100, (stats.hp / maxHp) * 100));
   const xpPercent = Math.max(0, Math.min(100, (xp / nextXp) * 100));
 
@@ -161,9 +161,11 @@ const Header = ({
                     className="h-full bg-gradient-to-r from-[#1e3a8a] via-[#3b82f6] to-[#60a5fa] shadow-[0_0_10px_rgba(59,130,246,0.3)]"
                   />
                 </div>
-                <span className="ml-4 font-['Cinzel'] text-[8px] text-blue-400 tracking-[0.2em] font-bold opacity-70">
-                  {xp} <span className="opacity-30 text-white">/</span> {nextXp}
-                </span>
+                {nextXp > 0 && (
+                  <span className="ml-4 font-['Cinzel'] text-[8px] text-blue-400 tracking-[0.2em] font-bold opacity-70">
+                    {xp} <span className="opacity-30 text-white">/</span> {nextXp}
+                  </span>
+                )}
               </div>
             </div>
           </div>

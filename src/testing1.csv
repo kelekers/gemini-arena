@@ -1,0 +1,77 @@
+
+=== NUSANTARA SAGA: EXPEDITION SIMULATOR ===
+┌─────────┬─────────┬─────┬───────────────────────────┬──────────┬───────────┬──────────┐
+│ (index) │ Pioneer │ Lvl │ Musuh                     │ Win Rate │ Avg Turns │ Status   │
+├─────────┼─────────┼─────┼───────────────────────────┼──────────┼───────────┼──────────┤
+│ 0       │ 'DIPO'  │ 1   │ 'Mata Besi V1'            │ '98.4%'  │ '8.3'     │ 'LANJUT' │
+│ 1       │ 'DIPO'  │ 2   │ 'Serdadu Ekspedisi'       │ '100.0%' │ '8.6'     │ 'LANJUT' │
+│ 2       │ 'DIPO'  │ 3   │ 'Kasuari Glitch'          │ '100.0%' │ '9.9'     │ 'LANJUT' │
+│ 3       │ 'DIPO'  │ 3   │ 'The Rusted Guardian'     │ '59.7%'  │ '21.2'    │ 'LANJUT' │
+│ 4       │ 'DIPO'  │ 4   │ 'Mariner Speelman'        │ '100.0%' │ '11.2'    │ 'LANJUT' │
+│ 5       │ 'DIPO'  │ 4   │ 'Parakang Terdistorsi'    │ '100.0%' │ '9.7'     │ 'LANJUT' │
+│ 6       │ 'DIPO'  │ 5   │ 'Anoa Alkimia'            │ '100.0%' │ '10.5'    │ 'LANJUT' │
+│ 7       │ 'DIPO'  │ 5   │ 'Kraken Protocol'         │ '99.0%'  │ '25.7'    │ 'LANJUT' │
+│ 8       │ 'DIPO'  │ 6   │ 'Mandor Oranje'           │ '100.0%' │ '11.5'    │ 'LANJUT' │
+│ 9       │ 'DIPO'  │ 6   │ 'Kuyang Neon'             │ '100.0%' │ '10.3'    │ 'LANJUT' │
+│ 10      │ 'DIPO'  │ 6   │ 'Driller Drone V3'        │ '100.0%' │ '10.8'    │ 'LANJUT' │
+│ 11      │ 'DIPO'  │ 6   │ 'Colonel Andresen (Tank)' │ '97.9%'  │ '28.1'    │ 'LANJUT' │
+│ 12      │ 'DIPO'  │ 7   │ 'KNIL Inquisitor'         │ '100.0%' │ '11.8'    │ 'LANJUT' │
+│ 13      │ 'DIPO'  │ 7   │ 'Harimau Glitch'          │ '100.0%' │ '11.0'    │ 'LANJUT' │
+│ 14      │ 'DIPO'  │ 8   │ 'Begu Ganjang Alkimia'    │ '100.0%' │ '9.3'     │ 'LANJUT' │
+│ 15      │ 'DIPO'  │ 8   │ 'The Eternal Relic'       │ '98.3%'  │ '30.3'    │ 'LANJUT' │
+│ 16      │ 'DIPO'  │ 8   │ 'Sentinel Omega'          │ '100.0%' │ '13.8'    │ 'LANJUT' │
+│ 17      │ 'DIPO'  │ 8   │ 'Shadow of Heroes'        │ '100.0%' │ '13.0'    │ 'LANJUT' │
+│ 18      │ 'DIPO'  │ 8   │ 'Neo-KNIL Commando'       │ '100.0%' │ '12.3'    │ 'LANJUT' │
+│ 19      │ 'DIPO'  │ 8   │ 'Willem Van Aeterne'      │ '91.8%'  │ '31.6'    │ 'LANJUT' │
+│ 20      │ 'DIPO'  │ 8   │ 'SANG TAPA (True Entity)' │ '56.5%'  │ '44.6'    │ 'LANJUT' │
+└─────────┴─────────┴─────┴───────────────────────────┴──────────┴───────────┴──────────┘
+┌─────────┬─────────┬─────┬───────────────────────────┬──────────┬───────────┬──────────┐
+│ (index) │ Pioneer │ Lvl │ Musuh                     │ Win Rate │ Avg Turns │ Status   │
+├─────────┼─────────┼─────┼───────────────────────────┼──────────┼───────────┼──────────┤
+│ 0       │ 'KARTI' │ 1   │ 'Mata Besi V1'            │ '100.0%' │ '9.2'     │ 'LANJUT' │
+│ 1       │ 'KARTI' │ 2   │ 'Serdadu Ekspedisi'       │ '100.0%' │ '9.8'     │ 'LANJUT' │
+│ 2       │ 'KARTI' │ 3   │ 'Kasuari Glitch'          │ '100.0%' │ '11.5'    │ 'LANJUT' │
+│ 3       │ 'KARTI' │ 3   │ 'The Rusted Guardian'     │ '65.8%'  │ '25.2'    │ 'LANJUT' │
+│ 4       │ 'KARTI' │ 4   │ 'Mariner Speelman'        │ '100.0%' │ '15.6'    │ 'LANJUT' │
+│ 5       │ 'KARTI' │ 4   │ 'Parakang Terdistorsi'    │ '100.0%' │ '13.7'    │ 'LANJUT' │
+│ 6       │ 'KARTI' │ 5   │ 'Anoa Alkimia'            │ '100.0%' │ '15.9'    │ 'LANJUT' │
+│ 7       │ 'KARTI' │ 5   │ 'Kraken Protocol'         │ '89.8%'  │ '39.2'    │ 'LANJUT' │
+│ 8       │ 'KARTI' │ 6   │ 'Mandor Oranje'           │ '100.0%' │ '17.9'    │ 'LANJUT' │
+│ 9       │ 'KARTI' │ 6   │ 'Kuyang Neon'             │ '100.0%' │ '16.2'    │ 'LANJUT' │
+│ 10      │ 'KARTI' │ 6   │ 'Driller Drone V3'        │ '100.0%' │ '16.9'    │ 'LANJUT' │
+│ 11      │ 'KARTI' │ 6   │ 'Colonel Andresen (Tank)' │ '98.0%'  │ '45.5'    │ 'LANJUT' │
+│ 12      │ 'KARTI' │ 7   │ 'KNIL Inquisitor'         │ '100.0%' │ '18.6'    │ 'LANJUT' │
+│ 13      │ 'KARTI' │ 7   │ 'Harimau Glitch'          │ '100.0%' │ '17.3'    │ 'LANJUT' │
+│ 14      │ 'KARTI' │ 8   │ 'Begu Ganjang Alkimia'    │ '100.0%' │ '15.2'    │ 'LANJUT' │
+│ 15      │ 'KARTI' │ 8   │ 'The Eternal Relic'       │ '100.0%' │ '51.9'    │ 'LANJUT' │
+│ 16      │ 'KARTI' │ 8   │ 'Sentinel Omega'          │ '100.0%' │ '22.7'    │ 'LANJUT' │
+│ 17      │ 'KARTI' │ 8   │ 'Shadow of Heroes'        │ '100.0%' │ '21.5'    │ 'LANJUT' │
+│ 18      │ 'KARTI' │ 8   │ 'Neo-KNIL Commando'       │ '100.0%' │ '20.4'    │ 'LANJUT' │
+│ 19      │ 'KARTI' │ 8   │ 'Willem Van Aeterne'      │ '99.9%'  │ '53.8'    │ 'LANJUT' │
+│ 20      │ 'KARTI' │ 8   │ 'SANG TAPA (True Entity)' │ '63.3%'  │ '76.1'    │ 'LANJUT' │
+└─────────┴─────────┴─────┴───────────────────────────┴──────────┴───────────┴──────────┘
+┌─────────┬─────────┬─────┬───────────────────────────┬──────────┬───────────┬──────────┐
+│ (index) │ Pioneer │ Lvl │ Musuh                     │ Win Rate │ Avg Turns │ Status   │
+├─────────┼─────────┼─────┼───────────────────────────┼──────────┼───────────┼──────────┤
+│ 0       │ 'MADA'  │ 1   │ 'Mata Besi V1'            │ '100.0%' │ '6.8'     │ 'LANJUT' │
+│ 1       │ 'MADA'  │ 2   │ 'Serdadu Ekspedisi'       │ '100.0%' │ '7.1'     │ 'LANJUT' │
+│ 2       │ 'MADA'  │ 3   │ 'Kasuari Glitch'          │ '100.0%' │ '8.1'     │ 'LANJUT' │
+│ 3       │ 'MADA'  │ 3   │ 'The Rusted Guardian'     │ '75.9%'  │ '17.0'    │ 'LANJUT' │
+│ 4       │ 'MADA'  │ 4   │ 'Mariner Speelman'        │ '100.0%' │ '8.9'     │ 'LANJUT' │
+│ 5       │ 'MADA'  │ 4   │ 'Parakang Terdistorsi'    │ '100.0%' │ '7.9'     │ 'LANJUT' │
+│ 6       │ 'MADA'  │ 5   │ 'Anoa Alkimia'            │ '100.0%' │ '8.3'     │ 'LANJUT' │
+│ 7       │ 'MADA'  │ 5   │ 'Kraken Protocol'         │ '93.6%'  │ '19.2'    │ 'LANJUT' │
+│ 8       │ 'MADA'  │ 6   │ 'Mandor Oranje'           │ '100.0%' │ '8.4'     │ 'LANJUT' │
+│ 9       │ 'MADA'  │ 6   │ 'Kuyang Neon'             │ '100.0%' │ '7.6'     │ 'LANJUT' │
+│ 10      │ 'MADA'  │ 6   │ 'Driller Drone V3'        │ '100.0%' │ '7.6'     │ 'LANJUT' │
+│ 11      │ 'MADA'  │ 6   │ 'Colonel Andresen (Tank)' │ '97.7%'  │ '19.4'    │ 'LANJUT' │
+│ 12      │ 'MADA'  │ 7   │ 'KNIL Inquisitor'         │ '100.0%' │ '8.4'     │ 'LANJUT' │
+│ 13      │ 'MADA'  │ 7   │ 'Harimau Glitch'          │ '100.0%' │ '7.7'     │ 'LANJUT' │
+│ 14      │ 'MADA'  │ 8   │ 'Begu Ganjang Alkimia'    │ '100.0%' │ '6.7'     │ 'LANJUT' │
+│ 15      │ 'MADA'  │ 8   │ 'The Eternal Relic'       │ '99.6%'  │ '20.7'    │ 'LANJUT' │
+│ 16      │ 'MADA'  │ 8   │ 'Sentinel Omega'          │ '100.0%' │ '9.1'     │ 'LANJUT' │
+│ 17      │ 'MADA'  │ 8   │ 'Shadow of Heroes'        │ '100.0%' │ '9.0'     │ 'LANJUT' │
+│ 18      │ 'MADA'  │ 8   │ 'Neo-KNIL Commando'       │ '100.0%' │ '8.4'     │ 'LANJUT' │
+│ 19      │ 'MADA'  │ 8   │ 'Willem Van Aeterne'      │ '93.3%'  │ '20.8'    │ 'LANJUT' │
+│ 20      │ 'MADA'  │ 8   │ 'SANG TAPA (True Entity)' │ '47.5%'  │ '28.6'    │ 'TEWAS'  │
+└─────────┴─────────┴─────┴───────────────────────────┴──────────┴───────────┴──────────┘

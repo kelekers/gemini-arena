@@ -37,7 +37,6 @@ const App = () => {
   // --- KONSTANTA SISTEM (Base 30 Calibration) ---
   const MAX_STAT = 60;
   const MAX_LEVEL = 8;
-  const POINTS_PER_LEVEL = 4;
 
   // --- STATE NAVIGASI & UI ---
   const [currentScene, setCurrentScene] = useState('MAIN_MENU');
@@ -88,36 +87,34 @@ const App = () => {
 
   const [lastNarrativeNode, setLastNarrativeNode] = useState(null);
 
-  // --- 1. LOGIKA CALCULATED STATS (EFFECTIVE CALIBRATION) ---
-  const effectiveStats = useMemo(() => {
-    const stats = { ...baseStats };
-    
-    Object.values(equippedItems).forEach(item => {
-      if (item && item.stats) {
-        Object.entries(item.stats).forEach(([s, v]) => {
-          if (stats[s] !== undefined) stats[s] += v;
-        });
-      }
-    });
+// --- DI DALAM APP.JS ---
 
-    activeBuffs.forEach(buff => {
-      if (buff.stat === 'All_Stats') {
-        Object.keys(baseStats).forEach(s => { stats[s] += buff.val; });
-      } else if (stats[buff.stat] !== undefined) {
-        stats[buff.stat] += buff.val;
-      }
-    });
+// 1. Ubah effectiveStats agar menghitung Scaling Progresif & Gear Otomatis
+const effectiveStats = useMemo(() => {
+  // A. Hitung Poin Stat Progresif (Scaling Otomatis)
+  // Lvl 1-4: +5 poin, Lvl 5-8: +10 poin
+  const autoStatPoints = playerLevel <= 4 
+    ? (playerLevel - 1) * 5 
+    : (4 * 5) + (playerLevel - 4) * 10;
 
-    Object.keys(baseStats).forEach(s => {
-      stats[s] = Math.min(MAX_STAT, stats[s]);
-    });
-    
-    stats.maxHp = stats.Tahan * 10;
-    stats.name = selectedHero?.name || "Pahlawan";
-    
-    return stats;
-  }, [baseStats, equippedItems, activeBuffs, selectedHero]);
+  const stats = { ...baseStats };
 
+  // B. Hitung Equipment (dari Inventory)
+  Object.values(equippedItems).forEach(item => {
+    if (item && item.stats) {
+      Object.entries(item.stats).forEach(([s, v]) => {
+        if (stats[s] !== undefined) stats[s] += v;
+      });
+    }
+  });
+
+  // C. FORMULA HP BARU (Vitality Buff)
+  // Hasil Simulasi: (Tahan * 15) + (Lvl * 100) agar tidak one-shot
+  stats.maxHp = (stats.Tahan * 15) + (playerLevel * 50);
+  stats.name = selectedHero?.name || "Pahlawan";
+  
+  return stats;
+}, [baseStats, equippedItems, activeBuffs, selectedHero, playerLevel, activeIsland]);
   // Kalkulasi Skor Alignment (Jati Diri) dari Story Flags
   const alignmentScores = useMemo(() => {
     return {
@@ -146,7 +143,8 @@ const App = () => {
       const overflowXp = playerXp - xpNeeded;
       setPlayerLevel(prev => prev + 1);
       setPlayerXp(overflowXp);
-      setFreePoints(prev => prev + POINTS_PER_LEVEL);
+      const autoStatPoints = playerLevel <= 4 ? 4 * playerLevel : 8 * playerLevel;
+      setFreePoints(prev => prev + autoStatPoints);
       setShowLevelUp(true);
       setCurrentHp(effectiveStats.maxHp);
     }

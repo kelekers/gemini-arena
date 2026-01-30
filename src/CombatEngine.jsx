@@ -39,7 +39,7 @@ const CombatEngine = ({
   // --- 1. KALKULASI DAMAGE (STRATEGIC SCALING) ---
   const getPlayerDmg = (stat) => {
     const base = playerStats[stat] * 1.8;
-    const roll = Math.floor(Math.random() * 10) + 1;
+    const roll = Math.floor(Math.random() * 11);
     let damage = Math.round(base + (roll * 1.5));
     
     // Critical Hit pada angka 10
@@ -50,14 +50,30 @@ const CombatEngine = ({
       criticalHit.current = true;
     }
 
+    if (roll === 0) {
+      damage = Math.max(1, Math.round(damage * 0.5));
+    }
+
     return damage;
   };
 
+  // const getEnemyDmg = () => {
+  //   const def = (playerStats.Tahan || 5) / 1.2;
+  //   const base = (enemyData.atk || 20) - def;
+  //   const roll = Math.floor(Math.random() * 8) + 1;
+  //   return Math.max(12, Math.round(base + roll));
+  // };
+
+  // 2. REVISI KRUSIAL: Enemy Damage dengan Mitigasi Persentase
   const getEnemyDmg = () => {
-    const def = (playerStats.Tahan || 5) / 1.2;
-    const base = (enemyData.atk || 20) - def;
-    const roll = Math.floor(Math.random() * 8) + 1;
-    return Math.max(12, Math.round(base + roll));
+    const roll = Math.floor(Math.random() * 10) + 1;
+    
+    // Formula: Final = RawAtk * (100 / (100 + Tahan))
+    const mitigation = 100 / (100 + playerStats.Tahan);
+    const rawDamage = enemyData.atk + roll;
+    
+    // Minimal damage 5 agar tetap ada tantangan
+    return Math.max(5, Math.round(rawDamage * mitigation));
   };
 
   // --- 2. MEKANIK PERTAHANAN (PARRY SYSTEM) ---
@@ -111,7 +127,7 @@ const CombatEngine = ({
       setCombatLog(`${enemyData.name} sedang mengincar celah karsamu...`);
       
       const timer = setTimeout(() => {
-        const parryChance = 25 + (playerStats.Luwes * 2.5);
+        const parryChance = Math.min(80, 25 + (playerStats.Luwes * 2.5));
         const canAttemptParry = (Math.random() * 100) <= parryChance;
 
         if (canAttemptParry) {

@@ -15,7 +15,7 @@ const StatsModal = ({ isOpen, stats, freePoints, level, onUpgrade, onClose }) =>
   };
 
   // --- KONSTANTA SISTEM BARU ---
-  const MAX_STAT = 30; 
+  const MAX_STAT = 60; 
 
   return (
     <AnimatePresence>

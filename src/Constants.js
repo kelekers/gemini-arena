@@ -709,17 +709,17 @@ export const MARKET_CATALOG = {
 // --- 14. ENEMIES: PAPUA REGION ---
 export const ENEMIES = {
   // =========================================================================
-  // WILAYAH I: PAPUA (1910) - Tingkat Kesulitan: Pemula (Easy)
-  // Target Level: 1-2 | Reward Rata-rata: 30-50 XP, 50-100 Gold
+  // WILAYAH I: PAPUA (1910) - Target Level: 1-2
+  // Rebalance: Menaikkan Atk dasar agar pemain belajar pentingnya Parry.
   // =========================================================================
   "PAP_CYB_DRONE": {
     id: "PAP_CYB_DRONE",
     name: "Mata Besi V1",
     type: "CYBER",
-    hp: 80,
-    atk: 12,
-    xpGain: 35,
-    goldGain: 45,
+    hp: 100,      // Naik dari 75
+    atk: 15,      // Naik dari 10
+    xpGain: 15,
+    goldGain: 80,
     image: "https://images.unsplash.com/photo-1535376472810-5d229c6bda89?q=80&w=1000&auto=format&fit=crop",
     desc: "Unit pengintai Neo-VOC yang mendistorsi pemandangan hutan Papua."
   },
@@ -727,10 +727,10 @@ export const ENEMIES = {
     id: "PAP_HUM_KNIL",
     name: "Serdadu Ekspedisi",
     type: "HUMAN",
-    hp: 110,
-    atk: 15,
-    xpGain: 50,
-    goldGain: 80,
+    hp: 125,      // Naik dari 100
+    atk: 18,      // Naik dari 14
+    xpGain: 20,
+    goldGain: 100,
     image: "https://images.unsplash.com/photo-1599839575945-a9e5af0c3fa5?q=80&w=1000&auto=format&fit=crop",
     desc: "Pasukan kolonial yang pikirannya telah disinkronkan dengan frekuensi Sang Tapa."
   },
@@ -738,10 +738,10 @@ export const ENEMIES = {
     id: "PAP_CRE_KASUARI",
     name: "Kasuari Glitch",
     type: "CREATURE",
-    hp: 140,
-    atk: 20,
-    xpGain: 65,
-    goldGain: 60,
+    hp: 160,      // Naik dari 130
+    atk: 22,      // Naik dari 18
+    xpGain: 25,
+    goldGain: 120,
     image: "https://images.unsplash.com/photo-1518467664548-23098f98a335?q=80&w=1000&auto=format&fit=crop",
     desc: "Burung endemik yang kakinya kini mengandung bilah logam alkimia."
   },
@@ -749,26 +749,26 @@ export const ENEMIES = {
     id: "PAP_BOS_GUARDIAN",
     name: "The Rusted Guardian",
     type: "BOSS",
-    hp: 250,
-    atk: 35,
-    xpGain: 300,
-    goldGain: 500,
+    hp: 400,      // Naik dari 250 (Harus jadi tembok pertama)
+    atk: 32,      // Naik dari 25
+    xpGain: 65,
+    goldGain: 600,
     image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1000&auto=format&fit=crop",
     desc: "Manifestasi Jangkar Alkimia pertama yang melindungi gletser Jayawijaya."
   },
 
   // =========================================================================
-  // WILAYAH II: SULAWESI (1667) - Tingkat Kesulitan: Menengah (Medium)
-  // Target Level: 3-4 | Reward Rata-rata: 100-200 XP, 150-300 Gold
+  // WILAYAH II: SULAWESI (1667) - Target Level: 3-4
+  // Rebalance: Menekan HP pemain dengan Atk yang lebih konsisten.
   // =========================================================================
-  "SUL_HUM_MARINER": {
-    id: "SUL_HUM_MARINER",
+  "SUL_SEA_SENTRY": {
+    id: "SUL_SEA_SENTRY",
     name: "Mariner Speelman",
     type: "HUMAN",
-    hp: 180,
-    atk: 28,
-    xpGain: 120,
-    goldGain: 180,
+    hp: 280,      // Naik dari 200
+    atk: 35,      // Naik dari 24
+    xpGain: 45,
+    goldGain: 250,
     image: "https://images.unsplash.com/photo-1590214691122-80f0ed17282b?q=80&w=1000&auto=format&fit=crop",
     desc: "Awak kapal VOC Speelman yang menggunakan zirah resonansi air."
   },
@@ -776,10 +776,10 @@ export const ENEMIES = {
     id: "SUL_SPI_PARAKANG",
     name: "Parakang Terdistorsi",
     type: "SPIRIT",
-    hp: 150,
-    atk: 45,
-    xpGain: 150,
-    goldGain: 120,
+    hp: 240,      // Naik dari 180
+    atk: 48,      // Naik dari 32 (Sangat mematikan tapi rapuh)
+    xpGain: 55,
+    goldGain: 300,
     image: "https://images.unsplash.com/photo-1509248961158-e54f6934749c?q=80&w=1000&auto=format&fit=crop",
     desc: "Manusia jadi-jadian lokal yang terjebak dalam loop waktu digital."
   },
@@ -787,10 +787,10 @@ export const ENEMIES = {
     id: "SUL_CRE_ANOA",
     name: "Anoa Alkimia",
     type: "CREATURE",
-    hp: 220,
-    atk: 32,
-    xpGain: 180,
-    goldGain: 150,
+    hp: 320,      // Naik dari 250
+    atk: 40,      // Naik dari 28
+    xpGain: 65,
+    goldGain: 280,
     image: "https://images.unsplash.com/photo-1544552866-d3ed42536cfd?q=80&w=1000&auto=format&fit=crop",
     desc: "Anoa gunung yang tanduknya kini memancarkan laser energi Sang Tapa."
   },
@@ -798,26 +798,26 @@ export const ENEMIES = {
     id: "SUL_BOS_KRAKEN",
     name: "Kraken Protocol",
     type: "BOSS",
-    hp: 950,
-    atk: 60,
-    xpGain: 1000,
+    hp: 850,      // Naik dari 650
+    atk: 58,      // Naik dari 45
+    xpGain: 180,
     goldGain: 1500,
     image: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=1000&auto=format&fit=crop",
     desc: "Sistem pertahanan laut Neo-VOC yang melilit benteng Somba Opu."
   },
 
   // =========================================================================
-  // WILAYAH III: KALIMANTAN (1859) - Tingkat Kesulitan: Sulit (Hard)
-  // Target Level: 5-6 | Reward Rata-rata: 300-500 XP, 400-600 Gold
+  // WILAYAH III: KALIMANTAN (1859) - Target Level: 5-6
+  // Rebalance: Fokus pada "Bulkiness" (Darah tebal) musuh.
   // =========================================================================
   "KAL_HUM_OVERSEER": {
     id: "KAL_HUM_OVERSEER",
     name: "Mandor Oranje",
     type: "HUMAN",
-    hp: 280,
-    atk: 48,
-    xpGain: 350,
-    goldGain: 450,
+    hp: 450,
+    atk: 55,
+    xpGain: 100,
+    goldGain: 500,
     image: "https://images.unsplash.com/photo-1595590424283-b8f17842773f?q=80&w=1000&auto=format&fit=crop",
     desc: "Pengawas tambang yang menggunakan exoskeleton uap bertenaga batu bara."
   },
@@ -825,10 +825,10 @@ export const ENEMIES = {
     id: "KAL_SPI_KUYANG",
     name: "Kuyang Neon",
     type: "SPIRIT",
-    hp: 200,
-    atk: 65,
-    xpGain: 400,
-    goldGain: 350,
+    hp: 400,
+    atk: 70,
+    xpGain: 110,
+    goldGain: 450,
     image: "https://images.unsplash.com/photo-1610416390141-8e9987677983?q=80&w=1000&auto=format&fit=crop",
     desc: "Hantu pedalaman yang organ dalamnya digantikan oleh kabel optik biru."
   },
@@ -836,37 +836,51 @@ export const ENEMIES = {
     id: "KAL_CYB_DRILLER",
     name: "Driller Drone V3",
     type: "CYBER",
-    hp: 250,
-    atk: 40,
-    xpGain: 380,
-    goldGain: 550,
+    hp: 420,
+    atk: 62,
+    xpGain: 100,
+    goldGain: 600,
     image: "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?q=80&w=1000&auto=format&fit=crop",
     desc: "Robot penggali Neo-VOC yang mencari urat nadi energi Kalimantan."
+  },
+  "KAL_CRE_ENGGANG": {
+    id: "KAL_CRE_ENGGANG",
+    name: "Enggang Kristal",
+    type: "CREATURE", hp: 380, atk: 50, xpGain: 80, goldGain: 400,
+    image: "https://images.unsplash.com/photo-1555169062-013468b47731",
+    desc: "Burung suci yang bulunya berubah menjadi kaca tajam akibat radiasi alkimia."
   },
   "KAL_BOS_ANDRESEN": {
     id: "KAL_BOS_ANDRESEN",
     name: "Colonel Andresen (Tank)",
     type: "BOSS",
-    hp: 1600,
-    atk: 85,
-    xpGain: 2500,
+    hp: 1200,     // Naik dari 900
+    atk: 80,      // Naik dari 65
+    xpGain: 400,
     goldGain: 3000,
     image: "https://images.unsplash.com/photo-1533575677843-2615560640d2?q=80&w=1000&auto=format&fit=crop",
     desc: "Komandan KNIL yang menyatu dengan Tank Alkimia miliknya."
   },
+  "KAL_BOS_CORE": {
+    id: "KAL_BOS_CORE",
+    name: "The Driller Core",
+    type: "BOSS", hp: 1500, atk: 90, xpGain: 500, goldGain: 4000,
+    image: "https://images.unsplash.com/photo-1518544806308-8737b475420f",
+    desc: "Inti mesin bor Neo-VOC yang mengekstraksi Karsa langsung dari perut bumi."
+  },
 
   // =========================================================================
-  // WILAYAH IV: SUMATRA (1833) - Tingkat Kesulitan: Sangat Sulit (Expert)
-  // Target Level: 7 | Reward Rata-rata: 600-800 XP, 700-1000 Gold
+  // WILAYAH IV: SUMATRA (1833) - Target Level: 7
+  // Rebalance: Musuh mulai bisa melakukan "Two-Shot" jika pemain tidak parry.
   // =========================================================================
   "SUM_HUM_INQUISITOR": {
     id: "SUM_HUM_INQUISITOR",
     name: "KNIL Inquisitor",
     type: "HUMAN",
-    hp: 400,
-    atk: 65,
-    xpGain: 650,
-    goldGain: 750,
+    hp: 600,
+    atk: 85,
+    xpGain: 250,
+    goldGain: 1000,
     image: "https://images.unsplash.com/photo-1550953250-7d35398684d5?q=80&w=1000&auto=format&fit=crop",
     desc: "Pasukan khusus De Kock yang dibekali pedang laser anti-gerilya."
   },
@@ -874,10 +888,10 @@ export const ENEMIES = {
     id: "SUM_CRE_TIGER",
     name: "Harimau Glitch",
     type: "CREATURE",
-    hp: 350,
-    atk: 80,
-    xpGain: 700,
-    goldGain: 600,
+    hp: 550,
+    atk: 95,
+    xpGain: 280,
+    goldGain: 900,
     image: "https://images.unsplash.com/photo-1501706369511-06b086053b27?q=80&w=1000&auto=format&fit=crop",
     desc: "Pemangsa puncak yang kini memiliki kemampuan teleportasi jarak pendek."
   },
@@ -885,10 +899,10 @@ export const ENEMIES = {
     id: "SUM_SPI_BEGU",
     name: "Begu Ganjang Alkimia",
     type: "SPIRIT",
-    hp: 300,
-    atk: 90,
-    xpGain: 750,
-    goldGain: 650,
+    hp: 500,
+    atk: 105,
+    xpGain: 300,
+    goldGain: 1100,
     image: "https://images.unsplash.com/photo-1548504770-436282915645?q=80&w=1000&auto=format&fit=crop",
     desc: "Roh bayangan yang memanjang mengikuti kabel energi Neo-VOC."
   },
@@ -896,26 +910,26 @@ export const ENEMIES = {
     id: "SUM_BOS_RELIC",
     name: "The Eternal Relic",
     type: "BOSS",
-    hp: 2500,
-    atk: 120,
-    xpGain: 4000,
+    hp: 1800,     // Naik dari 1400
+    atk: 115,     // Naik dari 95
+    xpGain: 800,
     goldGain: 5000,
     image: "https://images.unsplash.com/photo-1516714819001-8ee7a13b71d7?q=80&w=1000&auto=format&fit=crop",
     desc: "Jangkar Alkimia IV yang telah membangun katedral logam di atas bukit Bonjol."
   },
 
   // =========================================================================
-  // WILAYAH V: JAWA (1945) - Tingkat Kesulitan: Mustahil (Nightmare)
-  // Target Level: 8 (MAX) | Reward: Massive XP & Gold (Persiapan Final)
+  // WILAYAH V: JAWA (1945) - Target Level: 8 (MAX)
+  // Rebalance: Final Stand. Kroco pun terasa seperti Boss Wilayah I.
   // =========================================================================
   "JAV_CYB_SENTINEL": {
     id: "JAV_CYB_SENTINEL",
     name: "Sentinel Omega",
     type: "CYBER",
-    hp: 600,
-    atk: 100,
-    xpGain: 1200,
-    goldGain: 1000,
+    hp: 900,      // Sangat tebal
+    atk: 125,     // Sangat sakit
+    xpGain: 500,
+    goldGain: 1500,
     image: "https://images.unsplash.com/photo-1531297461136-82lw33903847?q=80&w=1000&auto=format&fit=crop",
     desc: "Garda depan Batavia-Prime yang memiliki perisai energi absolut."
   },
@@ -923,10 +937,10 @@ export const ENEMIES = {
     id: "JAV_SPI_SHADOW",
     name: "Shadow of Heroes",
     type: "SPIRIT",
-    hp: 550,
-    atk: 120,
-    xpGain: 1300,
-    goldGain: 1100,
+    hp: 850,
+    atk: 135,
+    xpGain: 600,
+    goldGain: 1800,
     image: "https://images.unsplash.com/photo-1519074069444-1ba4fff66d16?q=80&w=1000&auto=format&fit=crop",
     desc: "Gema dari pahlawan yang gagal di timeline Batavia-Prime."
   },
@@ -934,10 +948,10 @@ export const ENEMIES = {
     id: "JAV_HUM_COMMANDO",
     name: "Neo-KNIL Commando",
     type: "HUMAN",
-    hp: 500,
-    atk: 130,
-    xpGain: 1400,
-    goldGain: 1400,
+    hp: 800,
+    atk: 140,
+    xpGain: 700,
+    goldGain: 2000,
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop",
     desc: "Elite Assassin milik Willem Van Aeterne."
   },
@@ -945,21 +959,21 @@ export const ENEMIES = {
     id: "JAV_BOS_AETERNE",
     name: "Willem Van Aeterne",
     type: "BOSS",
-    hp: 4000,
-    atk: 160,
-    xpGain: 10000,
+    hp: 2200,     // Naik dari 1800
+    atk: 155,     // Naik dari 125
+    xpGain: 2000,
     goldGain: 10000,
     image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000&auto=format&fit=crop",
     desc: "Sang Arsitek Batavia-Prime. Memanipulasi gravitasi dan waktu."
   },
-  "JAV_BOS_SANGTAPA": {
-    id: "JAV_BOS_SANGTAPA",
+  "JAV_BOS_SANG_TAPA": {
+    id: "JAV_BOS_SANG_TAPA",
     name: "SANG TAPA (True Entity)",
     type: "BOSS",
-    hp: 8000,
-    atk: 200,
-    xpGain: 50000,
-    goldGain: 0, // Tidak butuh gold di akhir cerita
+    hp: 3200,     // Naik sedikit dari 3200
+    atk: 150,     // Naik dari 145 (Target Win Rate: 35-45%)
+    xpGain: 0,
+    goldGain: 0,
     image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop",
     desc: "Inti dari segala anomali. Pemangsa energi kehidupan Nusantara."
   }
@@ -1639,8 +1653,8 @@ export const STORY_NODES = {
     glitch: true,
     options: [
       { 
-        text: "[CORRUPTION] Terima tawaran kekuatan (+20 Max HP)", 
-        rewardStat: { maxHp: 20 },
+        text: "[CORRUPTION] Terima tawaran kekuatan (+5 Kuat)", 
+        rewardStat: { Kuat: 5 },
         alignment: { CORRUPTION: 1 },
         nextNode: "SUL_16_DIVE_PREP"
       },
