@@ -198,7 +198,6 @@ const App = () => {
     if (item.type === 'CONSUMABLE') {
       const effect = item.effect || {};
       if (effect.hp) setCurrentHp(prev => Math.min(effectiveStats.maxHp, prev + effect.hp));
-      if
       
       Object.entries(effect).forEach(([key, val]) => {
         if (key !== 'hp' && key !== 'status') {
