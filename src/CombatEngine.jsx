@@ -9,7 +9,8 @@ const CombatEngine = ({
   player, 
   playerStats, 
   playerInventory, 
-  enemyData, 
+  enemyData,
+  island, 
   statusEffects, 
   onStatusChange, 
   onHpChange, 
@@ -86,7 +87,7 @@ const CombatEngine = ({
       // REWARD PARRY: Memberikan +40 energi Saka (Sakti)
       setUltimateBar(prev => Math.min(100, prev + 40));
       setCombatLog("TANGKISAN SEMPURNA! Aliran takdir berbalik.");
-      setCameraShake(15);
+      setCameraShake(10);
       setTimeout(() => {
         setCameraShake(0);
         setTurnState('PLAYER_TURN');
@@ -230,15 +231,32 @@ const CombatEngine = ({
   };
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden bg-[#020202] font-serif text-white">
+    <div className="relative h-screen w-screen overflow-hidden bg-black font-serif text-white">
+
       {/* Visual Shaker */}
       <div 
-        className="absolute inset-0 transition-transform duration-75" 
-        style={{ transform: `translate(${Math.random() * cameraShake}px, ${Math.random() * cameraShake}px)` }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/asfalt-dark.png')] opacity-20" />
-      </div>
+          className="absolute transition-transform duration-75 ease-out" 
+          style={{ 
+            // TEKNIK 1: Tambahkan scale agar saat goyang, pinggiran tidak 'bolong'
+            // TEKNIK 2: Pindahkan backgroundImage ke sini
+            transform: `translate(${Math.random() * cameraShake}px, ${Math.random() * cameraShake}px) scale(${cameraShake > 0 ? 1.05 : 1})`,
+            top: '-5%',
+            left: '-5%',
+            width: '110%',
+            height: '110%',
+            backgroundImage: `url(${
+              enemyData.type === 'BOSS' 
+                ? '/src/assets/combat_boss.png' 
+                : island.combatImage
+            })`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
+        >
+          {/* Overlay Gradient & Tekstur (Ikut berguncang bersama background) */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black opacity-60" />
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/asfalt-dark.png')] opacity-20" />
+        </div>
 
       {/* HEADER HUD (UTUH & DINAMIS) */}
       <div className="absolute top-12 left-0 w-full px-20 flex justify-between z-50">
@@ -312,7 +330,7 @@ const CombatEngine = ({
           animate={{ x: turnState === 'ENEMY_TURN' || turnState === 'PARRY_WINDOW' ? -80 : 0 }} 
           className="ml-64 relative"
         >
-          <img src={enemyData.image} className="h-[550px] object-contain brightness-75 contrast-125" alt="Enemy" />
+          <img src={enemyData.image} className="object-contain brightness-75 contrast-125 translate-x-40 mb-80 scale-50" alt="Enemy" />
           <AnimatePresence>
             {turnState === 'PARRY_WINDOW' && (
               <motion.div 
@@ -330,15 +348,22 @@ const CombatEngine = ({
         <motion.div 
           className="absolute bottom-[-100px] left-[5%]"
           animate={{ 
-            x: actionState === 'ATTACK' ? 220 : 0, 
-            y: actionState === 'ULTIMATE' ? -180 : actionState === 'HURT' ? 30 : 0,
-            scale: actionState === 'ULTIMATE' ? 1.35 : 1,
+            x: (actionState === 'ATTACK' || actionState === 'ULTIMATE') ? 220 : 0, 
+            y: actionState === 'HURT' ? 30 : 0,
             rotate: actionState === 'HURT' ? -10 : 0,
-            filter: actionState === 'ULTIMATE' ? 'brightness(1.5) drop-shadow(0 0 30px #d4af37)' : 'none'
           }}
           transition={{ type: 'spring', stiffness: 100 }}
         >
-          <img src={actionState === 'ULTIMATE' ? playerStats.imgUlt : actionState === 'ATTACK' ? playerStats.imgAtk : playerStats.imgIdle} className="h-[950px] object-contain" alt="Hero" />
+        <img 
+          src={actionState === 'ULTIMATE' ? player.imgUlt : actionState === 'ATTACK' ? player.imgAtk : player.imageIdle} 
+          className={`
+            h-[950px] object-contain transition-all duration-500 ease-in-out
+            ${(actionState === 'ATTACK' || actionState === 'ULTIMATE') 
+              ? 'scale-60 -translate-x-[30px]'
+              : 'scale-35 -translate-x-[60px] -translate-y-[20px]'}
+          `} 
+          alt="Hero" 
+        />
         </motion.div>
       </div>
 

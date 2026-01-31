@@ -198,7 +198,7 @@ const NarrativeEngine = ({
           initial={{ opacity: 0, scale: 1.1 }} 
           animate={{ opacity: 0.2, scale: 1 }} 
           exit={{ opacity: 0, scale: 0.95 }}
-          className={`absolute inset-0 bg-cover bg-center grayscale blur-md transition-all duration-1000 ${isGlitching ? 'invert brightness-150 saturate-200' : ''}`}
+          className={`absolute inset-0 bg-cover bg-center grayscale blur-xs transition-all duration-1000 ${isGlitching ? 'invert brightness-150 saturate-200' : ''}`}
           style={{ backgroundImage: `url(${node.image})` }}
         />
       </AnimatePresence>

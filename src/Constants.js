@@ -113,7 +113,8 @@ export const MAP_ASSETS = {
     idleLocked: "/src/assets/pap_locked.png",
     hoverLocked: "/src/assets/pap_locked.png",
     landmark: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1000",
-    lore: "Titik di mana fajar Nusantara pertama kali menyentuh tanah. Jangkar alkimia di sini terkubur jauh di bawah akar pohon bakau purba yang bermutasi."
+    lore: "Titik di mana fajar Nusantara pertama kali menyentuh tanah. Jangkar alkimia di sini terkubur jauh di bawah akar pohon bakau purba yang bermutasi.",
+    combat: "/src/assets/combat_papua.png"
   },
   'sulawesi': {
     idleUnlocked: "/src/assets/sul_unlocked.png",
@@ -269,7 +270,8 @@ export const ITEMS_PAPUA = {
     price: 50,
     effect: { hp: 30 },
     description: "Sagu yang dimasak dengan tetesan embun alkimia. Memulihkan raga yang lelah dengan cepat.",
-    rarity: 'Common'
+    rarity: 'Common',
+    image: "/src/assets/item_papeda.png"
   },
   'p1_pinang_alkimia': {
     id: 'p1_pinang_alkimia',
@@ -278,7 +280,8 @@ export const ITEMS_PAPUA = {
     price: 120,
     effect: { Kuat: 2 }, // Buff untuk 1 battle berikutnya
     description: "Memberikan sensasi panas di dada dan meningkatkan kekuatan otot secara instan.",
-    rarity: 'Uncommon'
+    rarity: 'Uncommon',
+    image: "/src/assets/item_pinang.png"
   },
   'p1_air_penawar_bakau': {
     id: 'p1_air_penawar_bakau',
@@ -287,7 +290,8 @@ export const ITEMS_PAPUA = {
     price: 80,
     effect: { status: 'Cure_Poison' },
     description: "Sangat efektif untuk menetralisir racun dari gigitan Kasuari Belati.",
-    rarity: 'Common'
+    rarity: 'Common',
+    image: "/src/assets/item_air_penawar.png"
   },
 
   // --- ARMORY (Pertahanan & Aksesoris) ---
@@ -298,7 +302,8 @@ export const ITEMS_PAPUA = {
     price: 350,
     stats: { Tahan: 2 }, 
     description: "Tas tradisional yang dirajut menggunakan serat pohon yang terpapar karsa biru. Menambah ketahanan mental.",
-    rarity: 'Uncommon'
+    rarity: 'Uncommon',
+    image: "/src/assets/item_noken.png"
   },
   'p1_gelang_akar_bahar': {
     id: 'p1_gelang_akar_bahar',
@@ -307,7 +312,8 @@ export const ITEMS_PAPUA = {
     price: 500,
     stats: { Tahan: 3, Mistis: 1 },
     description: "Akar laut yang mengeras secara tidak alami. Memberikan perlindungan dari serangan mahluk halus.",
-    rarity: 'Rare'
+    rarity: 'Rare',
+    image: "/src/assets/item_gelang.png"
   },
 
   // --- WEAPONS (Serangan & Karsa) ---
@@ -318,7 +324,8 @@ export const ITEMS_PAPUA = {
     price: 750,
     stats: { Kuat: 5 },
     description: "Kapak batu megalitikum yang dipasangi sirkuit pemanas dari drone VOC 2120 yang hancur.",
-    rarity: 'Rare'
+    rarity: 'Rare',
+    image: "/src/assets/item_kapak.png"
   },
   'p1_tombak_ikan_biak': {
     id: 'p1_tombak_ikan_biak',
@@ -327,7 +334,8 @@ export const ITEMS_PAPUA = {
     price: 600,
     stats: { Luwes: 4 },
     description: "Tombak ringan yang sangat seimbang. Ujungnya terbuat dari tulang hiu yang telah melalui proses alkimia.",
-    rarity: 'Uncommon'
+    rarity: 'Uncommon',
+    image: "/src/assets/item_tombak.png"
   },
   'p1_belati_tulang_kasuari': {
     id: 'p1_belati_tulang_kasuari',
@@ -336,7 +344,8 @@ export const ITEMS_PAPUA = {
     price: 550,
     stats: { Kuat: 2, Luwes: 2 },
     description: "Senjata cepat untuk pahlawan yang mengandalkan serangan bertubi-tubi di balik kabut rawa.",
-    rarity: 'Uncommon'
+    rarity: 'Uncommon',
+    image: "/src/assets/item_belati.png"
   }
 };
 
@@ -740,7 +749,7 @@ export const ENEMIES = {
     atk: 15,      // Naik dari 10
     xpGain: 15,
     goldGain: 80,
-    image: "https://images.unsplash.com/photo-1535376472810-5d229c6bda89?q=80&w=1000&auto=format&fit=crop",
+    image: "/src/assets/pap_dro.png",
     desc: "Unit pengintai Neo-VOC yang mendistorsi pemandangan hutan Papua."
   },
   "PAP_HUM_KNIL": {
@@ -751,7 +760,7 @@ export const ENEMIES = {
     atk: 18,      // Naik dari 14
     xpGain: 20,
     goldGain: 100,
-    image: "https://images.unsplash.com/photo-1599839575945-a9e5af0c3fa5?q=80&w=1000&auto=format&fit=crop",
+    image: "/src/assets/pap_ser.png",
     desc: "Pasukan kolonial yang pikirannya telah disinkronkan dengan frekuensi Sang Tapa."
   },
   "PAP_CRE_KASUARI": {
@@ -762,7 +771,7 @@ export const ENEMIES = {
     atk: 22,      // Naik dari 18
     xpGain: 25,
     goldGain: 120,
-    image: "https://images.unsplash.com/photo-1518467664548-23098f98a335?q=80&w=1000&auto=format&fit=crop",
+    image: "/src/assets/pap_kas.png",
     desc: "Burung endemik yang kakinya kini mengandung bilah logam alkimia."
   },
   "PAP_BOS_GUARDIAN": {
@@ -773,7 +782,7 @@ export const ENEMIES = {
     atk: 32,      // Naik dari 25
     xpGain: 65,
     goldGain: 600,
-    image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1000&auto=format&fit=crop",
+    image: "/src/assets/pap_bos.png",
     desc: "Manifestasi Jangkar Alkimia pertama yang melindungi gletser Jayawijaya."
   },
 
@@ -1222,10 +1231,10 @@ export const STORY_NODES = {
     year: "Kaki Gunung Jayawijaya",
     speaker: "NARASI",
     text: "Jalur semakin menanjak. Udara semakin dingin. Tiba-tiba, seekor Burung Cendrawasih melintas. Ekornya yang indah tidak terbuat dari bulu, melainkan serat optik yang berpendar.",
-    image: "https://images.unsplash.com/photo-1608226079979-503433544a49?q=80&w=2000&auto=format&fit=crop",
+    image: "/src/assets/cendra.jpg",
     historyTitle: "Burung Surga (Cendrawasih)",
     historyText: "Paradisaeidae, atau Cendrawasih, dikenal sebagai 'Bird of Paradise'. Bulunya menjadi komoditas berharga di pasar Eropa awal abad ke-20, memicu perburuan liar. Di timeline ini, Neo-VOC mengubah mereka menjadi drone pengintai organik.",
-    historyImage: "https://upload.wikimedia.org/wikipedia/commons/2/29/Paradisaea_raggiana_2.jpg",
+    historyImage: "/src/assets/cendra1.jpg",
     glitch: true,
     options: [
       { 

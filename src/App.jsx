@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 
 // --- PENTING: Pastikan Constants.js sudah meng-export ENEMIES ---
-import { STORY_NODES, ISLANDS, ITEMS, ENEMIES, XP_TABLE } from './Constants';
+import { STORY_NODES, ISLANDS, ITEMS, ENEMIES, XP_TABLE, MAP_ASSETS } from './Constants';
 
 // Import Komponen UI
 import MainMenu from './MainMenu';
@@ -178,11 +178,14 @@ const effectiveStats = useMemo(() => {
     };
   }, [storyFlags]);
 
+  // REVISI: Sinkronisasi HP setiap kali Hero berubah
   useEffect(() => {
-    if (selectedHero && currentHp === 50 && playerLevel === 1) {
+    if (selectedHero) {
+      // Langsung set ke maxHp hero yang dipilih tanpa syarat "50"
       setCurrentHp(effectiveStats.maxHp);
     }
-  }, [selectedHero, effectiveStats.maxHp, currentHp, playerLevel]);
+    // Dependency cukup selectedHero.id agar tidak terjadi loop saat bertarung
+  }, [selectedHero?.id]);
 
   useEffect(() => {
     if (currentHp <= 0 && selectedHero && currentScene !== 'MAIN_MENU' && currentScene !== 'DEATH_SCENE') {
@@ -522,6 +525,10 @@ const effectiveStats = useMemo(() => {
               playerStats={{ ...effectiveStats, hp: currentHp }} 
               playerInventory={inventory}
               enemyData={activeEnemy}
+              island={{
+                ...activeIsland,
+                combatImage: MAP_ASSETS[activeIsland.id]?.combat || "/src/assets/combat_default.png"
+              }}
               statusEffects={statusEffects}
               onStatusChange={setStatusEffects}
               onHpChange={setCurrentHp}

@@ -27,8 +27,6 @@ const MainMenu = ({ onStart, unlockedEndings = [] }) => {
         transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
         className="absolute left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#d4af37]/50 to-transparent shadow-[0_0_15px_#d4af37]"
       />
-      {/* Efek Garis Statis (Scanlines halus) */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%]" />
     </div>
   );
 
