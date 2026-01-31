@@ -394,17 +394,7 @@ const effectiveStats = useMemo(() => {
 
   return (
     <div className="w-screen h-screen bg-black flex items-center justify-center overflow-hidden font-serif selection:bg-[#d4af37]/30 text-white">
-      <div 
-        style={{
-          width: '1920px',
-          height: '1080px',
-          transform: `scale(${scale})`,
-          transformOrigin: 'center center',
-          flexShrink: 0
-        }}
-        className="relative bg-[#050505] overflow-hidden shadow-2xl shadow-black"
-      >
-        
+      
         {showHUD && selectedHero && (
           <Header 
             player={selectedHero}
@@ -578,7 +568,6 @@ const effectiveStats = useMemo(() => {
           )}
         </AnimatePresence>
       </div>
-    </div>
   );
 };
 
