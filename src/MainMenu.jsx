@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, Lock } from 'lucide-react';
 
 const MainMenu = ({ onStart, unlockedEndings = [] }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [showArsipModal, setShowArsipModal] = useState(false);
+  const [showCredits, setShowCredits] = useState(false);
 
   // Sesuaikan dengan total rencana ending (misal 20)
   const TOTAL_ENDINGS = 4;
@@ -13,12 +14,97 @@ const MainMenu = ({ onStart, unlockedEndings = [] }) => {
     { label: 'MULAI', action: onStart },
     { label: 'ARSIP', action: () => setShowArsipModal(true) }, // Menu Baru
     { label: 'PENGATURAN', action: () => {} },
-    { label: 'KELUAR', action: () => {} },
+    { label: 'KREDIT', action: () => setShowCredits(true) },
   ];
+
+  // --- Komponen Garis Pemindai (Background) ---
+  const ScanningLines = () => (
+    <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden opacity-20">
+      {/* Garis Horizontal yang Berjalan */}
+      <motion.div
+        initial={{ top: "-10%" }}
+        animate={{ top: "110%" }}
+        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+        className="absolute left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#d4af37]/50 to-transparent shadow-[0_0_15px_#d4af37]"
+      />
+      {/* Efek Garis Statis (Scanlines halus) */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%]" />
+    </div>
+  );
+
+  // --- Komponen Logo SANG SAKA dengan Shimmer ---
+  const SangSakaLogo = () => (
+    <div className="relative mb-6 group">
+      {/* Shadow Glow di belakang teks untuk memberikan aura */}
+      <div className="absolute inset-0 blur-2xl bg-[#d4af37]/10 scale-110 opacity-50 group-hover:opacity-80 transition-opacity duration-1000" />
+
+      <motion.h1 
+        className="relative font-['Cinzel'] text-8xl font-black uppercase pointer-events-none select-none
+                  bg-gradient-to-b from-[#ffffff] via-[#d4af37] to-[#8a6d3b] bg-clip-text text-transparent
+                  drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)]"
+        style={{
+          WebkitTextStroke: "0.5px rgba(212, 175, 55, 0.3)", // Memberikan outline tipis emas
+        }}
+      >
+        SANG SAKA
+
+      {/* Efek Kilatan Cahaya (Shimmer) yang lebih halus */}
+      <motion.div
+        initial={{ left: "-150%" }}
+        animate={{ left: "150%" }}
+        transition={{ duration: 4, repeat: Infinity, repeatDelay: 3, ease: "linear" }}
+        className="absolute top-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-[-25deg] pointer-events-none mix-blend-overlay"
+      />
+      </motion.h1>
+
+      {/* Dekorasi Garis Bawah - Menyeimbangkan besar teks */}
+      <motion.div 
+        initial={{ width: 0, opacity: 0 }}
+        animate={{ width: "50%", opacity: 1 }}
+        transition={{ delay: 1, duration: 1.5 }}
+        className="h-[2px] bg-gradient-to-r from-[#d4af37]/0 via-[#d4af37]/50 to-[#d4af37]/0 mt-2"
+      />
+    </div>
+  );
+
+  const AtmosphericFX = () => {
+    // Membuat 20 butir debu secara acak
+    const dustParticles = useMemo(() => [...Array(20)], []);
+
+    return (
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        {/* 2. Floating Dust (Partikel Debu/Bara) */}
+        {dustParticles.map((_, i) => (
+          <motion.div
+            key={i}
+            initial={{ 
+              x: Math.random() * 1920, 
+              y: Math.random() * 1080, 
+              opacity: Math.random() * 0.5 
+            }}
+            animate={{
+              y: [null, Math.random() * -200], // Bergerak ke atas
+              x: [null, (Math.random() - 0.5) * 100], // Goyang kiri-kanan
+              opacity: [0, 0.5, 0],
+            }}
+            transition={{
+              duration: 2 + Math.random() * 10,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: Math.random() * 4
+            }}
+            className="absolute w-1 h-1 bg-[#d4af37] rounded-full blur-[1px]"
+          />
+        ))}
+
+      </div>
+    );
+  };
 
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-[#050505] font-serif text-white selection:bg-[#d4af37]/30">
       
+
       {/* 1. Background Layer (Tetap Sama) */}
       <div 
         className="absolute inset-0 bg-cover bg-center transition-transform duration-[20s] ease-out scale-95"
@@ -27,9 +113,16 @@ const MainMenu = ({ onStart, unlockedEndings = [] }) => {
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent" />
       </div>
 
-      {/* 2. Main UI Container */}
+      {/* 2. LAYER TENGAH: Atmospheric Effects (Sekarang di atas Background) */}
+
+
+      {/* 3. Main UI Container */}
       <div className="relative z-10 flex h-full flex-col justify-center px-20 lg:px-32">
-        
+        {/* 1. Logo Header dengan Shimmer */}
+        <SangSakaLogo />
+        <AtmosphericFX />
+        <ScanningLines />
+
         {/* PROGRESS ARSIP (Bumbu Baru) */}
         <div className="mb-12 space-y-4">
           <div className="flex items-center space-x-4 opacity-50 group hover:opacity-100 transition-opacity duration-700 cursor-default">
@@ -43,7 +136,7 @@ const MainMenu = ({ onStart, unlockedEndings = [] }) => {
               <motion.div 
                 initial={{ width: 0 }}
                 animate={{ width: `${(unlockedEndings.length / TOTAL_ENDINGS) * 100}%` }}
-                className="h-full yellow shadow-[0_0_10px_#d4af37]"
+                className="h-full bg-[#d4af37] shadow-[0_0_10px_#d4af37]"
               />
             </div>
             <span className="font-['Cinzel'] text-xs text-white/30 tracking-widest font-bold">
@@ -127,6 +220,24 @@ const MainMenu = ({ onStart, unlockedEndings = [] }) => {
                     </div>
                   ))
                 )}
+              </div>
+              <p className="mt-12 text-center font-['Cinzel'] text-[8px] tracking-[1em] text-white/10 uppercase">
+                Klik di mana saja untuk menutup
+              </p>
+            </div>
+          </div>
+        )}
+
+        {showCredits && (
+          <div 
+            className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-20 backdrop-blur-3xl"
+            onClick={() => setShowCredits(false)}
+          >
+            <div className="w-full max-w-2xl border border-white/5 bg-[#050505] p-16 shadow-[0_0_100px_rgba(0,0,0,1)]">
+              <h2 className="font-['Cinzel'] text-4xl text-[#d4af37] mb-12 tracking-widest uppercase italic">KREDIT</h2>
+              <div className="space-y-4">
+                <p className="font-['Cinzel'] text-sm tracking-widest text-white/80">@kelekerss</p>
+                <p className="font-['Cinzel'] text-sm tracking-widest text-white/80">Gemini</p>
               </div>
               <p className="mt-12 text-center font-['Cinzel'] text-[8px] tracking-[1em] text-white/10 uppercase">
                 Klik di mana saja untuk menutup

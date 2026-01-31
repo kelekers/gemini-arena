@@ -39,7 +39,7 @@ const App = () => {
   const MAX_LEVEL = 8;
 
   // --- STATE NAVIGASI & UI ---
-  const [currentScene, setCurrentScene] = useState('MAIN_MENU');
+  const [currentScene, setCurrentScene] = useState('PRE_START');
   const [openModal, setOpenModal] = useState(null); 
   const [showLevelUp, setShowLevelUp] = useState(false);
 
@@ -88,6 +88,60 @@ const App = () => {
   const [lastNarrativeNode, setLastNarrativeNode] = useState(null);
 
 // --- DI DALAM APP.JS ---
+
+const PlatformWarning = ({ onEnter }) => {
+  return (
+    <motion.div 
+      initial={{ opacity: 0 }} 
+      animate={{ opacity: 1 }} 
+      exit={{ opacity: 0 }}
+      onClick={onEnter}
+      className="absolute inset-0 z-[9999] bg-[#020202] flex flex-col items-center justify-center cursor-pointer p-10 text-center"
+    >
+      {/* Background Ambience */}
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/asfalt-dark.png')] opacity-20 pointer-events-none" />
+      <div className="absolute w-[600px] h-[600px] bg-[#d4af37]/5 blur-[120px] rounded-full pointer-events-none" />
+
+      <motion.div 
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.5, duration: 1 }}
+        className="relative z-10 space-y-12"
+      >
+        <div className="flex flex-col items-center">
+          <AlertTriangle size={48} className="text-[#d4af37] mb-6 animate-pulse" />
+          <h1 className="font-['Cinzel'] text-3xl tracking-[0.6em] text-white font-bold uppercase">
+            Optimasi Sistem
+          </h1>
+          <div className="h-[1px] w-48 bg-gradient-to-r from-transparent via-[#d4af37]/50 to-transparent mt-4" />
+        </div>
+
+        <div className="space-y-4 max-w-2xl">
+          <p className="font-['Cormorant_Garamond'] text-2xl text-gray-400 leading-relaxed">
+            Ekspedisi <span className="text-white italic">Nusantara Saga</span> dirancang khusus untuk pengalaman visual maksimal pada perangkat 
+            <span className="text-[#d4af37] font-bold"> Desktop / PC</span>.
+          </p>
+          <p className="font-['Cormorant_Garamond'] text-xl text-gray-500 italic">
+            Gunakan mode <span className="text-white">Window Fullscreen (F11)</span> untuk sinkronisasi Karsa yang sempurna.
+          </p>
+        </div>
+
+        <motion.div 
+          animate={{ opacity: [0.3, 1, 0.3] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="pt-24"
+        >
+          <p className="font-['Cinzel'] text-[10px] tracking-[0.8em] text-[#d4af37] uppercase font-black">
+            Ketuk di mana saja untuk menyelaraskan takdir
+          </p>
+        </motion.div>
+      </motion.div>
+
+      {/* Border Frame */}
+      <div className="absolute inset-10 border border-[#d4af37]/10 pointer-events-none" />
+    </motion.div>
+  );
+};
 
 // 1. Ubah effectiveStats agar menghitung Scaling Progresif & Gear Otomatis
 const effectiveStats = useMemo(() => {
@@ -190,6 +244,20 @@ const effectiveStats = useMemo(() => {
   };
 
   // --- 4. HANDLERS UTAMA ---
+  const handleEnterGame = () => {
+    // Memicu Fullscreen API
+    const element = document.documentElement;
+    if (element.requestFullscreen) {
+      element.requestFullscreen().catch(err => {
+        console.warn(`Gagal Fullscreen: ${err.message}`);
+      });
+    } else if (element.webkitRequestFullscreen) { // Safari
+      element.webkitRequestFullscreen();
+    }
+
+    setCurrentScene('MAIN_MENU');
+  };
+
   const handleUseItem = (item, index) => {
     if (!item) return;
 
@@ -385,6 +453,10 @@ const effectiveStats = useMemo(() => {
         <LevelUpOverlay isOpen={showLevelUp} level={playerLevel} onClose={() => setShowLevelUp(false)} />
 
         <AnimatePresence mode="wait">
+          {currentScene === 'PRE_START' && (
+            <PlatformWarning key="warning" onEnter={handleEnterGame} />
+          )}
+
           {currentScene === 'MAIN_MENU' && (
             <MainMenu key="menu" onStart={() => setCurrentScene('CHAR_SELECTION')} unlockedEndings={unlockedEndings} />
           )}
