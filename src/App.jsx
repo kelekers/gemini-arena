@@ -328,7 +328,7 @@ const effectiveStats = useMemo(() => {
   const handleConfirmHero = (hero) => {
     setSelectedHero(hero);
     setBaseStats(hero.stats);
-    setCurrentHp(hero.stats.Tahan * 10);
+    setCurrentHp(effectiveStats.maxHp);
     setCurrentScene('PROLOGUE');
   };
 

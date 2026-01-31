@@ -85,7 +85,7 @@ const Header = ({
             >
               <img 
                 src={player.imageIdle} 
-                className="h-full w-full object-cover mt-12 scale-[3.5] grayscale-[0.3] group-hover:grayscale-0 transition-all duration-700" 
+                className="h-full w-full object-cover mt-18 translate-x-3 scale-[3.5] grayscale-[0.3] group-hover:grayscale-0 transition-all duration-700" 
                 alt="Pahlawan" 
               />
               {/* Overlay gradasi pada potret */}

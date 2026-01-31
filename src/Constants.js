@@ -24,9 +24,9 @@ export const PIONEERS = [
       Luwes: 10,  // Spesialis: Parry & Evasion
       Wibawa: 6
     },
-    imageIdle: "https://api.dicebear.com/7.x/avataaars/svg?seed=Dipo", 
-    imgAtk: "https://api.dicebear.com/7.x/avataaars/svg?seed=DipoAtk",
-    imgUlt: "https://api.dicebear.com/7.x/avataaars/svg?seed=DipoUlt",
+    imageIdle: "/src/assets/dipo_idle.png", 
+    imgAtk: "/src/assets/dipo_atk.png",
+    imgUlt: "/src/assets/dipo_ult.png",
   },
   {
     id: 'karti',
@@ -41,9 +41,9 @@ export const PIONEERS = [
       Luwes: 4,
       Wibawa: 5
     },
-    imageIdle: "https://api.dicebear.com/7.x/avataaars/svg?seed=Karti",
-    imgAtk: "https://api.dicebear.com/7.x/avataaars/svg?seed=KartiAtk",
-    imgUlt: "https://api.dicebear.com/7.x/avataaars/svg?seed=KartiUlt",
+    imageIdle: "/src/assets/karti_idle.png",
+    imgAtk: "/src/assets/karti_atk.png",
+    imgUlt: "/src/assets/karti_ult.png",
   },
   {
     id: 'mada',
@@ -58,9 +58,9 @@ export const PIONEERS = [
       Luwes: 4,
       Wibawa: 6
     },
-    imageIdle: "https://api.dicebear.com/7.x/avataaars/svg?seed=Mada",
-    imgAtk: "https://api.dicebear.com/7.x/avataaars/svg?seed=MadaAtk",
-    imgUlt: "https://api.dicebear.com/7.x/avataaars/svg?seed=MadaUlt",
+    imageIdle: "/src/assets/mada_idle.png",
+    imgAtk: "/src/assets/mada_atk.png",
+    imgUlt: "/src/assets/mada_ult.png",
   }
 ];
 
@@ -71,35 +71,35 @@ export const ISLANDS = [
     id: 'papua', 
     name: 'PESISIR PAPUA', 
     status: 'unlocked', // Diubah dari isUnlocked agar sesuai komponen
-    coordinates: { top: '65%', left: '80%' }, 
+    coordinates: { top: '48%', left: '76%' }, 
     startNode: 'TEST_GATEWAY'
   },
   { 
     id: 'sulawesi', 
     name: 'PEGUNUNGAN SULAWESI', 
     status: 'locked', 
-    coordinates: { top: '50%', left: '60%' },
+    coordinates: { top: '30%', left: '58%' },
     startNode: 'SULAWESI_01_ARRIVAL'
   },
   { 
     id: 'kalimantan', 
     name: 'RIMBA KALIMANTAN', 
     status: 'locked', 
-    coordinates: { top: '45%', left: '45%' },
+    coordinates: { top: '28%', left: '32%' },
     startNode: 'KALIMANTAN_01_ARRIVAL'
   },
   { 
     id: 'sumatra', 
     name: 'PESISIR ANDALAS', 
     status: 'locked', 
-    coordinates: { top: '40%', left: '20%' },
+    coordinates: { top: '40%', left: '10%' },
     startNode: 'SUMATRA_01_ARRIVAL'
   },
   { 
     id: 'jawa', 
     name: 'PUSAT KARSA JAWA', 
     status: 'locked', 
-    coordinates: { top: '70%', left: '35%' },
+    coordinates: { top: '60%', left: '40%' },
     startNode: 'JAWA_01_ARRIVAL'
   }
 ];
@@ -108,31 +108,43 @@ export const ISLANDS = [
 // Menampung gambar pulau dan informasi detail sidebar
 export const MAP_ASSETS = {
   'papua': {
-    idleUnlocked: "https://api.dicebear.com/7.x/identicon/svg?seed=PapuaIdle", // Ganti dengan asset PNG pulau
-    hoverUnlocked: "https://api.dicebear.com/7.x/identicon/svg?seed=PapuaHover",
-    idleLocked: "https://api.dicebear.com/7.x/identicon/svg?seed=PapuaLocked",
-    hoverLocked: "https://api.dicebear.com/7.x/identicon/svg?seed=PapuaLockedHover",
+    idleUnlocked: "/src/assets/pap_unlocked.png",
+    hoverUnlocked: "/src/assets/pap_unlocked.png",
+    idleLocked: "/src/assets/pap_locked.png",
+    hoverLocked: "/src/assets/pap_locked.png",
     landmark: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1000",
     lore: "Titik di mana fajar Nusantara pertama kali menyentuh tanah. Jangkar alkimia di sini terkubur jauh di bawah akar pohon bakau purba yang bermutasi."
   },
   'sulawesi': {
-    idleUnlocked: "https://api.dicebear.com/7.x/identicon/svg?seed=SulawesiIdle",
-    hoverUnlocked: "https://api.dicebear.com/7.x/identicon/svg?seed=SulawesiHover",
-    idleLocked: "https://api.dicebear.com/7.x/identicon/svg?seed=SulawesiLocked",
-    hoverLocked: "https://api.dicebear.com/7.x/identicon/svg?seed=SulawesiLockedHover",
+    idleUnlocked: "/src/assets/sul_unlocked.png",
+    hoverUnlocked: "/src/assets/sul_unlocked.png",
+    idleLocked: "/src/assets/sul_locked.png",
+    hoverLocked: "/src/assets/sul_locked.png",
     landmark: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1000",
     lore: "Gunung-gunung di sini bukan terbuat dari batu, melainkan logam alkimia VOC masa depan yang mulai mengonsumsi alam sekitarnya."
   },
   'kalimantan': {
     landmark: "https://images.unsplash.com/photo-1542332213-9b5a5a3fab35?q=80&w=1000",
+    idleUnlocked: "/src/assets/kal_unlocked.png",
+    hoverUnlocked: "/src/assets/kal_unlocked.png",
+    idleLocked: "/src/assets/kal_locked.png",
+    hoverLocked: "/src/assets/kal_locked.png",
     lore: "Hutan yang menyesatkan arah bagi mereka yang tidak memiliki Karsa murni. Sinyal dari tahun 2120 paling kuat terdeteksi di sini."
   },
-  'sumatra_coast': {
+  'sumatra': {
     landmark: "https://images.unsplash.com/photo-1505832018823-50331d70d237?q=80&w=1000",
+    idleUnlocked: "/src/assets/sum_unlocked.png",
+    hoverUnlocked: "/src/assets/sum_unlocked.png",
+    idleLocked: "/src/assets/sum_locked.png",
+    hoverLocked: "/src/assets/sum_locked.png",
     lore: "Sisa-sisa kejayaan maritim yang kini dihuni oleh Iron Sentinels penjaga gerbang barat."
   },
   'jawa': {
     landmark: "https://images.unsplash.com/photo-1625472304192-3a56c078028f?q=80&w=1000",
+    idleUnlocked: "/src/assets/jaw_unlocked.png",
+    hoverUnlocked: "/src/assets/jaw_unlocked.png",
+    idleLocked: "/src/assets/jaw_locked.png",
+    hoverLocked: "/src/assets/jaw_locked.png",
     lore: "Tempat di mana Sang Tapa Utama berada. Ini adalah jantung dari paradoks waktu yang harus dihancurkan."
   }
 };
@@ -1173,8 +1185,11 @@ export const STORY_NODES = {
     id: "PAPUA_12_DRONE_ATTACK",
     type: "STORY",
     speaker: "NARASI",
-    text: "Pembicaraan terhenti. Suara berdenging tajam memecah udara. Dari balik kanopi, tiga unit 'Mata Besi' (Scout Drone) turun dengan lensa merah menyala. Mereka memindai Tetua Adat sebagai target eliminasi.",
+    text: "Pembicaraan terhenti. Suara berdenging tajam memecah udara. Dari balik kanopi, seekor Burung Kasuari yang berbentuk robot turun. Ia melihat Tetua Adat sebagai target eliminasi.",
     image: "https://images.unsplash.com/photo-1589254065878-42c9da997008?q=80&w=2000&auto=format&fit=crop",
+    historyTitle: "Burung Kasuari",
+    historyText: "Burung kasuari atau dalam bahasa latin disebut Casuarius. Dikenal sebagai burung terbesar di dunia yang tidak bisa terbang, kasuari memiliki bulu hitam yang berkilauan dan cakar tajam.",
+    historyImage: "https://upload.wikimedia.org/wikipedia/commons/1/1e/Casuarius_casuarius_-_Australia_Zoo.jpg",
     glitch: true,
     options: [
       { text: "Lindungi Tetua! (Mulai Pertempuran)", nextNode: "PAPUA_BATTLE_DRONE_01" }
@@ -1184,7 +1199,7 @@ export const STORY_NODES = {
   "PAPUA_BATTLE_DRONE_01": {
     id: "PAPUA_BATTLE_DRONE_01",
     type: "BATTLE_TRIGGER",
-    enemyId: "PAP_CYB_DRONE",
+    enemyId: "PAP_CRE_KASUARI",
     winNode: "PAPUA_13_POST_BATTLE",
     loseNode: "DEATH_SCENE"
   },
@@ -1193,7 +1208,7 @@ export const STORY_NODES = {
     id: "PAPUA_13_POST_BATTLE",
     type: "STORY",
     speaker: "ARKEOLOG (KAMU)",
-    text: "Bangkai drone itu berasap. Di badannya tertera kode produksi tahun 2115. Neo-VOC mencoba memetakan tambang emas di sini seabad lebih awal.",
+    text: "Bangkai Kasuari itu berasap. Di badannya terdapat serabut fiber optik. Neo-VOC mencoba memengaruhi makhluk di sini seabad lebih awal.",
     image: "https://images.unsplash.com/photo-1616858204618-9c17df20b003?q=80&w=2000&auto=format&fit=crop",
     options: [
       { text: "Lanjutkan perjalanan ke kaki gunung", nextNode: "PAPUA_14_JUNGLE_EXPLORE" }

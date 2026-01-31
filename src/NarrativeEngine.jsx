@@ -360,12 +360,12 @@ const NarrativeEngine = ({
             className="fixed inset-0 z-[500] flex items-center justify-center bg-black/98 backdrop-blur-3xl p-10"
           >
             <div className="flex flex-col items-center w-full max-w-4xl">
-              <span className="text-[#d4af37] font-['Cinzel'] tracking-[2em] text-[10px] mb-24 uppercase opacity-40 ml-8 text-center">Menimbang Suratan Takdir</span>
+              <span className="text-[#d4af37] font-['Cinzel'] tracking-[2em] text-[10px] mb-6 uppercase opacity-40 ml-8 text-center">Menimbang Suratan Takdir</span>
               
               <div className="relative h-80 w-80 flex items-center justify-center">
                 <motion.div
                   animate={!showMath ? { 
-                    rotateY: [0, 1080], rotateX: [0, 360], scale: [1, 1.3, 1]
+                    rotateY: [0, 1080], rotateX: [0, 360], scale: [1, 1.2, 1]
                   } : { rotateY: 0, rotateX: 0 }}
                   transition={{ duration: 1.5, ease: "circInOut" }}
                 >
@@ -373,7 +373,7 @@ const NarrativeEngine = ({
                     {rollData.roll > 0 ? (
                       <motion.span 
                         key="val" initial={{ scale: 0, filter: 'blur(10px)' }} animate={{ scale: 1, filter: 'blur(0px)' }}
-                        className="font-['Cinzel'] text-[12rem] font-black text-white drop-shadow-[0_0_80px_rgba(212,175,55,0.7)]"
+                        className="font-['Cinzel'] text-[6rem] font-black text-white drop-shadow-[0_0_80px_rgba(212,175,55,0.7)]"
                       >
                         {rollData.roll}
                       </motion.span>
@@ -385,10 +385,10 @@ const NarrativeEngine = ({
                 <div className="absolute inset-0 border-2 border-[#d4af37]/10 rounded-full animate-ping" />
               </div>
 
-              <div className="mt-24 h-40 flex flex-col items-center">
+              <div className="mt-4 min-h-[180px] flex flex-col items-center">
                 {showMath && (
                   <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center space-y-10">
-                    <div className="flex items-center space-x-12 text-6xl font-['Cinzel'] font-black">
+                    <div className="flex items-center space-x-12 text-4xl font-['Cinzel'] font-black">
                       <div className="text-center group">
                         <span className="block text-[10px] text-white/30 tracking-widest mb-3 uppercase">Dadu</span>
                         <span className="text-white/90">{rollData.roll}</span>
@@ -418,7 +418,7 @@ const NarrativeEngine = ({
                 {checkOutcome && (
                   <motion.div 
                     initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-                    className={`mt-24 font-['Cinzel'] text-5xl tracking-[1.5em] font-black uppercase text-center ml-12
+                    className={`mt-4 font-['Cinzel'] text-4xl tracking-[1.5em] font-black uppercase text-center ml-12
                       ${checkOutcome === 'success' ? 'text-green-500' : 'text-red-700'}
                     `}
                   >

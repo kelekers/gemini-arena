@@ -31,13 +31,13 @@ const CharSelection = ({ onConfirm, onBack }) => {
     enter: (direction) => ({
       opacity: 0,
       scale: 0.8,
-      rotate: -5,
+      rotateY: -15
     }),
     center: {
       zIndex: 1,
       opacity: 1,
-      scale: 0.85,
-      rotate: -5, // Rotasi default (miring)
+      rotateY: -15,
+      scale: 0.85, // Rotasi default (miring)
       transition: {
         duration: isFirstRender ? 5 : 2,
         ease: [0.16, 1, 0.3, 1]
@@ -55,7 +55,7 @@ const CharSelection = ({ onConfirm, onBack }) => {
     }),
     // Efek saat kursor diarahkan ke karakter
     hover: {
-      rotate: 0,
+      rotateY: 0,
       x: 0,
       scale: 1,
       transition: {
@@ -141,7 +141,7 @@ const CharSelection = ({ onConfirm, onBack }) => {
                 <img 
                   src={hero.imageIdle} 
                   alt={hero.name}
-                  className="mt-20 h-60 w-auto object-contain drop-shadow-[0_20px_60px_rgba(185,28,28,0.4)] filter contrast-125 brightness-110 transition-all duration-500 rounded-2xl outline-yellow-500 outline-2 scale-100"
+                  className="mt-20 h-60 w-auto object-contain drop-shadow-[0_20px_60px_rgba(185,28,28,0.4)] filter contrast-125 brightness-110 transition-all duration-500 rounded-2xl scale-200"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#b91c1c]/20 to-transparent blur-3xl -z-10" />
               </motion.div>

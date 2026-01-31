@@ -31,7 +31,26 @@ const WorldMap = ({ onSelectIsland, storyFlags = {} }) => {
       
       {/* 1. MAIN MAP AREA */}
       <main className="relative w-[75%] h-full border-r border-white/5 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://placehold.co/1920x1080/050505/111')] bg-cover opacity-30 pointer-events-none" />
+        {/* OCEAN BASE ANIMATION */}
+        <motion.div 
+          animate={{ 
+            backgroundPosition: ["0% 0%", "100% 100%"],
+            scale: [1, 1.05, 1] // Efek bernapas/gelombang pelan
+          }}
+          transition={{ 
+            duration: 120, // Sangat lambat agar tidak membuat pusing
+            repeat: Infinity, 
+            ease: "linear" 
+          }}
+          className="absolute inset-0 opacity-40 pointer-events-none"
+          style={{ 
+            backgroundImage: `url('/src/assets/ocean.png')`,
+            backgroundSize: '140% 140%', // Ukuran dilebihkan agar bisa "bergeser"
+          }}
+        />
+
+        {/* AMBIENT FOG (Opsional: Memberikan kedalaman) */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/20 pointer-events-none z-10" />
 
         {ISLANDS.map((island) => {
           // Logika Penentu Status Pulau
@@ -48,14 +67,16 @@ const WorldMap = ({ onSelectIsland, storyFlags = {} }) => {
           const islandAssets = MAP_ASSETS[island.id] || {};
 
           // A. Tentukan Gambar Dasar berdasarkan status dan interaksi
+          // --- LOGIKA TERBARU: ASET VS STATUS ---
           const isInteractive = isThisHovered || isThisLocked;
-          let currentImg = islandAssets.idleUnlocked; // Default
+          let currentImg;
 
-          if (islandStatus === 'locked') {
-            currentImg = isInteractive ? islandAssets.hoverLocked : islandAssets.idleLocked;
-          } else {
-            // Status 'unlocked' dan 'finished' menggunakan set gambar yang sama
+          if (islandStatus === 'finished') {
+            // SUDAH BEBAS: Gunakan aset Hijau/Restored (Panggil key 'unlocked' di Constants)
             currentImg = isInteractive ? islandAssets.hoverUnlocked : islandAssets.idleUnlocked;
+          } else {
+            // LOCKED atau UNLOCKED (SEDANG DIMINKAN): Gunakan aset Dystopian/Neo-VOC (Panggil key 'locked' di Constants)
+            currentImg = isInteractive ? islandAssets.hoverLocked : islandAssets.idleLocked;
           }
 
           // B. Tentukan Efek Visual (Tailwind Class)
@@ -99,9 +120,9 @@ const WorldMap = ({ onSelectIsland, storyFlags = {} }) => {
                     ? 'brightness(1.2) contrast(1.1) drop-shadow(0 0 20px rgba(212,175,55,0.4))' 
                     : 'brightness(1) contrast(1)'
                 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
                 // className mengontrol aura status wilayah (Locked/Unlocked/Finished)
-                className={`w-48 h-auto transition-all duration-700 pointer-events-none ${statusClasses}`}
+                className={`w-48 h-auto transition-all duration-700 pointer-events-none ${statusClasses} scale-150`}
               />
               
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
